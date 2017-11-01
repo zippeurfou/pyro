@@ -32,7 +32,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-build/
 develop-eggs/
 dist/
 downloads/
@@ -58,38 +57,12 @@ wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
 .cache
-nosetests.xml
-coverage.xml
-*,cover
-.hypothesis/
-*.out
-adam.unittest.save
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
+.coverage
 
 # Scrapy stuff:
 .scrapy
 
-# Sphinx documentation
-build/
-
-# PyBuilder
 target/
 
 # Jupyter Notebook
