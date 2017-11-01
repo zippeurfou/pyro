@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SVI Part II: Conditional Independence, Subsampling, and Amortization &mdash; Pyro Tutorials  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Pyro Tutorials  documentation" href="index.html"/>
+        <link rel="next" title="SVI Part III: ELBO Gradient Estimators" href="svi_part_iii.html"/>
+        <link rel="prev" title="SVI Part I: An Introduction to Stochastic Variational Inference in Pyro" href="svi_part_i.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pyro_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="svi_part_i.html">SVI Part I: An Introduction to Stochastic Variational Inference in Pyro</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SVI Part II: Conditional Independence, Subsampling, and Amortization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#The-Goal:-Scaling-SVI-to-Large-Datasets">The Goal: Scaling SVI to Large Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Marking-Conditional-Independence-in-Pyro">Marking Conditional Independence in Pyro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#irange"><code class="docutils literal"><span class="pre">irange</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#iarange"><code class="docutils literal"><span class="pre">iarange</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Subsampling">Subsampling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Automatic-subsampling-with-irange-and-iarange">Automatic subsampling with <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Custom-subsampling-strategies-with-irange-and-iarange">Custom subsampling strategies with <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Subsampling-when-there-are-only-local-random-variables">Subsampling when there are only local random variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Subsampling-when-there-are-both-global-and-local-random-variables">Subsampling when there are both global and local random variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Amortization">Amortization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#References">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="svi_part_iii.html">SVI Part III: ELBO Gradient Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vae.html">Variational Autoencoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_regression.html">Bayesian Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dmm.html">Modeling Polyphonic Music with a Deep Markov Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="air.html">Attend Infer Repeat</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pyro Tutorials</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>SVI Part II: Conditional Independence, Subsampling, and Amortization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/svi_part_ii.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="SVI-Part-II:-Conditional-Independence,-Subsampling,-and-Amortization">
+<h1>SVI Part II: Conditional Independence, Subsampling, and Amortization<a class="headerlink" href="#SVI-Part-II:-Conditional-Independence,-Subsampling,-and-Amortization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="The-Goal:-Scaling-SVI-to-Large-Datasets">
+<h2>The Goal: Scaling SVI to Large Datasets<a class="headerlink" href="#The-Goal:-Scaling-SVI-to-Large-Datasets" title="Permalink to this headline">¶</a></h2>
+<p>For a model with <span class="math">\(N\)</span> observations, running the <code class="docutils literal"><span class="pre">model</span></code> and
+<code class="docutils literal"><span class="pre">guide</span></code> and constructing the ELBO involves evaluating log pdf’s whose
+complexity scales badly with <span class="math">\(N\)</span>. This is a problem if we want to
+scale to large datasets. Luckily, the ELBO objective naturally supports
+subsampling provided that our model/guide have some conditional
+independence structure that we can take advantage of. For example, in
+the case that the observations are conditionally independent given the
+latents, the log likelihood term in the ELBO can be approximated with</p>
+<div class="math">
+\[ \sum_{i=1}^N \log p({\bf x}_i | {\bf z}) \approx  \frac{N}{M}
+\sum_{i\in{\mathcal{I}_M}} \log p({\bf x}_i | {\bf z})\]</div>
+<p>where <span class="math">\(\mathcal{I}_M\)</span> is a mini-batch of indices of size <span class="math">\(M\)</span>
+with <span class="math">\(M&lt;N\)</span> (for a discussion please see references [1,2]). Great,
+problem solved! But how do we do this in Pyro?</p>
+</div>
+<div class="section" id="Marking-Conditional-Independence-in-Pyro">
+<h2>Marking Conditional Independence in Pyro<a class="headerlink" href="#Marking-Conditional-Independence-in-Pyro" title="Permalink to this headline">¶</a></h2>
+<p>If a user wants to do this sort of thing in Pyro, he or she first needs
+to make sure that the model and guide are written in such a way that
+Pyro can leverage the relevant conditional independencies. Let’s see how
+this is done. Pyro provides two language primitives for marking
+conditional independencies: <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code>. Let’s start with
+the simpler of the two.</p>
+<div class="section" id="irange">
+<h3><code class="docutils literal"><span class="pre">irange</span></code><a class="headerlink" href="#irange" title="Permalink to this headline">¶</a></h3>
+<p>Let’s return to the example we used in the <a class="reference external" href="svi_part_i.html">previous
+tutorial</a>. For convenience let’s replicate the main
+logic of <code class="docutils literal"><span class="pre">model</span></code> here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># sample f from the beta prior</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;latent_fairness&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha0</span><span class="p">,</span> <span class="n">beta0</span><span class="p">)</span>
+    <span class="c1"># loop over the observed data</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+        <span class="c1"># observe datapoint i using the bernoulli likelihood</span>
+        <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">,</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For this model the observations are conditionally independent given the
+latent random variable <code class="docutils literal"><span class="pre">latent_fairness</span></code>. To explicitly mark this in
+Pyro we basically just need to replace the Python builtin <code class="docutils literal"><span class="pre">range</span></code> with
+the Pyro construct <code class="docutils literal"><span class="pre">irange</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># sample f from the beta prior</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;latent_fairness&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha0</span><span class="p">,</span> <span class="n">beta0</span><span class="p">)</span>
+    <span class="c1"># loop over the observed data [WE ONLY CHANGE THE NEXT LINE]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pyro</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="s2">&quot;data_loop&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+        <span class="c1"># observe datapoint i using the bernoulli likelihood</span>
+        <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">,</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We see that <code class="docutils literal"><span class="pre">pyro.irange</span></code> is very similar to <code class="docutils literal"><span class="pre">range</span></code> with one main
+difference: each invocation of <code class="docutils literal"><span class="pre">irange</span></code> requires the user to provide a
+unique name. The second argument is an integer just like for <code class="docutils literal"><span class="pre">range</span></code>.</p>
+<p>So far so good. Pyro can now leverage the conditional indendency of the
+observations given the latent random variable. But how this does
+actually work? Basically <code class="docutils literal"><span class="pre">pyro.irange</span></code> is implemented using a context
+manager. At every execution of the body of the <code class="docutils literal"><span class="pre">for</span></code> loop we enter a
+new (conditional) independence context which is then exited at the end
+of the <code class="docutils literal"><span class="pre">for</span></code> loop body. Let’s be very explicit about this:</p>
+<ul class="simple">
+<li>because each <code class="docutils literal"><span class="pre">pyro.observe</span></code> statement occurs within a different
+execution of the body of the <code class="docutils literal"><span class="pre">for</span></code> loop, Pyro marks each
+observation as independent</li>
+<li>this independence is properly a <em>conditional</em> independence <em>given</em>
+<code class="docutils literal"><span class="pre">latent_fairness</span></code> because <code class="docutils literal"><span class="pre">latent_fairness</span></code> is sampled <em>outside</em>
+of the context of <code class="docutils literal"><span class="pre">data_loop</span></code>.</li>
+</ul>
+<p>Before moving on, let’s mention some gotchas to be avoided when using
+<code class="docutils literal"><span class="pre">irange</span></code>. Consider the following variant of the above code snippet:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># WARNING do not do this!</span>
+<span class="n">my_reified_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pyro</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="s2">&quot;data_loop&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">my_reified_list</span><span class="p">:</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will <em>not</em> achieve the desired behavior, since <code class="docutils literal"><span class="pre">list()</span></code> will
+enter and exit the <code class="docutils literal"><span class="pre">data_loop</span></code> context completely before a single
+<code class="docutils literal"><span class="pre">pyro.observe</span></code> statement is called. Similarly, the user needs to take
+care not to leak mutable computations across the boundary of the context
+manager, as this may lead to subtle bugs. For example, <code class="docutils literal"><span class="pre">pyro.irange</span></code>
+is not appropriate for temporal models where each iteration of a loop
+depends on the previous iteration; in this case a <code class="docutils literal"><span class="pre">range</span></code> should be
+used instead.</p>
+</div>
+</div>
+<div class="section" id="iarange">
+<h2><code class="docutils literal"><span class="pre">iarange</span></code><a class="headerlink" href="#iarange" title="Permalink to this headline">¶</a></h2>
+<p>Conceptually <code class="docutils literal"><span class="pre">iarange</span></code> is the same as <code class="docutils literal"><span class="pre">irange</span></code> except that it is a
+vectorized operation (as <code class="docutils literal"><span class="pre">torch.arange</span></code> is to <code class="docutils literal"><span class="pre">range</span></code>). As such it
+potentially enables large speed-ups compared to the explicit <code class="docutils literal"><span class="pre">for</span></code>
+loop that appears with <code class="docutils literal"><span class="pre">irange</span></code>. Let’s see how this looks for our
+running example. First we need <code class="docutils literal"><span class="pre">data</span></code> to be in the form of a tensor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>  <span class="c1"># 6 heads and 4 tails</span>
+</pre></div>
+</div>
+<p>Then we have:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s1">&#39;observe_data&#39;</span><span class="p">):</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s compare this to the analogous <code class="docutils literal"><span class="pre">irange</span></code> construction
+point-by-point: - just like <code class="docutils literal"><span class="pre">irange</span></code>, <code class="docutils literal"><span class="pre">iarange</span></code> requires the user to
+specify a unique name. - note that this code snippet only introduces a
+single (observed) random variable (namely <code class="docutils literal"><span class="pre">obs</span></code>), since the entire
+tensor is considered at once. - since there is no need for an iterator
+in this case, there is no need to specify the length of the tensor(s)
+involved in the <code class="docutils literal"><span class="pre">iarange</span></code> context</p>
+<p>Note that the gotchas mentioned in the case of <code class="docutils literal"><span class="pre">irange</span></code> also apply to
+<code class="docutils literal"><span class="pre">iarange</span></code>.</p>
+</div>
+<div class="section" id="Subsampling">
+<h2>Subsampling<a class="headerlink" href="#Subsampling" title="Permalink to this headline">¶</a></h2>
+<p>We now know how to mark conditional independence in Pyro. This is useful
+in and of itself (see the <a class="reference external" href="svi_part_iii.html">dependency tracking
+section</a> in SVI Part III), but we’d also like to
+do subsampling so that we can do SVI on large datasets. Depending on the
+structure of the model and guide, Pyro supports several ways of doing
+subsampling. Let’s go through these one by one.</p>
+<div class="section" id="Automatic-subsampling-with-irange-and-iarange">
+<h3>Automatic subsampling with <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code><a class="headerlink" href="#Automatic-subsampling-with-irange-and-iarange" title="Permalink to this headline">¶</a></h3>
+<p>Let’s look at the simplest case first, in which we get subsampling for
+free with one or two additional arguments to <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pyro</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="s2">&quot;data_loop&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That’s all there is to it: we just use the argument <code class="docutils literal"><span class="pre">subsample_size</span></code>.
+Whenever we run <code class="docutils literal"><span class="pre">model()</span></code> we now only evaluate the log likelihood for
+5 randomly chosen datapoints in <code class="docutils literal"><span class="pre">data</span></code>; in addition, the log
+likelihood will be automatically scaled by the appropriate factor of
+<span class="math">\(\tfrac{10}{5} = 2\)</span>. What about <code class="docutils literal"><span class="pre">iarange</span></code>? The incantantion is
+entirely analogous:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s1">&#39;observe_data&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="k">as</span> <span class="n">ind</span><span class="p">:</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">,</span>
+                 <span class="n">data</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Importantly, <code class="docutils literal"><span class="pre">iarange</span></code> now returns a tensor of indices <code class="docutils literal"><span class="pre">ind</span></code>, which,
+in this case will be of length 5. Note that in addition to the argument
+<code class="docutils literal"><span class="pre">subsample_size</span></code> we also pass the argument <code class="docutils literal"><span class="pre">size</span></code> so that
+<code class="docutils literal"><span class="pre">iarange</span></code> is aware of the full size of the tensor <code class="docutils literal"><span class="pre">data</span></code> so that it
+can compute the correct scaling factor. Just like for <code class="docutils literal"><span class="pre">irange</span></code>, the
+user is responsible for selecting the correct datapoints using the
+indices provided by <code class="docutils literal"><span class="pre">iarange</span></code>.</p>
+<p>Finally, note that the user must pass the argument <code class="docutils literal"><span class="pre">use_cuda=True</span></code> to
+<code class="docutils literal"><span class="pre">irange</span></code> or <code class="docutils literal"><span class="pre">iarange</span></code> if <code class="docutils literal"><span class="pre">data</span></code> is on the GPU.</p>
+</div>
+<div class="section" id="Custom-subsampling-strategies-with-irange-and-iarange">
+<h3>Custom subsampling strategies with <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code><a class="headerlink" href="#Custom-subsampling-strategies-with-irange-and-iarange" title="Permalink to this headline">¶</a></h3>
+<p>Every time the above <code class="docutils literal"><span class="pre">model()</span></code> is run <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code> will
+sample new subsample indices. Since this subsampling is stateless, this
+can lead to some problems: basically for a sufficiently large dataset
+even after a large number of iterations there’s a nonnegligible
+probability that some of the datapoints will have never been selected.
+To avoid this the user can take control of subsampling by making use of
+the <code class="docutils literal"><span class="pre">subsample</span></code> argument to <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code>. See <a class="reference external" href="svi_part_ii.html">the
+docs</a> for details.</p>
+</div>
+<div class="section" id="Subsampling-when-there-are-only-local-random-variables">
+<h3>Subsampling when there are only local random variables<a class="headerlink" href="#Subsampling-when-there-are-only-local-random-variables" title="Permalink to this headline">¶</a></h3>
+<p>We have in mind a model with a joint probability density given by</p>
+<div class="math">
+\[p({\bf x}, {\bf z}) = \prod_{i=1}^N p({\bf x}_i | {\bf z}_i) p({\bf z}_i)\]</div>
+<p>For a model with this dependency structure the scale factor introduced
+by subsampling scales all the terms in the ELBO by the same amount.
+Consequently there’s no need to invoke any special Pyro constructs. This
+is the case, for example, for a vanilla VAE. This explains why for the
+VAE it’s permissible for the user to take complete control over
+subsampling and pass mini-batches directly to the model and guide
+without using <code class="docutils literal"><span class="pre">irange</span></code> or <code class="docutils literal"><span class="pre">iarange</span></code>. To see how this looks in
+detail, see the <a class="reference external" href="vae.html">VAE tutorial</a></p>
+</div>
+<div class="section" id="Subsampling-when-there-are-both-global-and-local-random-variables">
+<h3>Subsampling when there are both global and local random variables<a class="headerlink" href="#Subsampling-when-there-are-both-global-and-local-random-variables" title="Permalink to this headline">¶</a></h3>
+<p>In the coin flip examples above <code class="docutils literal"><span class="pre">irange</span></code> and <code class="docutils literal"><span class="pre">iarange</span></code> appeared in
+the model but not in the guide, since the only thing being subsampled
+was the observations. Let’s look at a more complicated example where
+subsampling appears in both the model and guide. To make things simple
+let’s keep the discussion somewhat abstract and avoid writing a complete
+model and guide.</p>
+<p>Consider the model specified by the following joint distribution:</p>
+<div class="math">
+\[ p({\bf x}, {\bf z}, \beta) = p(\beta)
+\prod_{i=1}^N p({\bf x}_i | {\bf z}_i) p({\bf z}_i | \beta)\]</div>
+<p>There are <span class="math">\(N\)</span> observations <span class="math">\(\{ {\bf x}_i \}\)</span> and <span class="math">\(N\)</span>
+local latent random variables <span class="math">\(\{ {\bf z}_i \}\)</span>. There is also a
+global latent random variable <span class="math">\(\beta\)</span>. Our guide will be
+factorized as</p>
+<div class="math">
+\[q({\bf z}, \beta) = q(\beta) \prod_{i=1}^N q({\bf z}_i | \beta, \lambda_i)\]</div>
+<p>Here we’ve been explicit about introducing <span class="math">\(N\)</span> local variational
+parameters <span class="math">\(\{\lambda_i \}\)</span>, while the other variational
+parameters are left implicit. Both the model and guide have conditional
+independencies. In particular, on the model side, given the
+<span class="math">\(\{ {\bf z}_i \}\)</span> the observations <span class="math">\(\{ {\bf x}_i \}\)</span> are
+independent. In addition, given <span class="math">\(\beta\)</span> the latent random
+variables <span class="math">\(\{\bf {z}_i \}\)</span> are independent. On the guide side,
+given the variational parameters <span class="math">\(\{\lambda_i \}\)</span> and
+<span class="math">\(\beta\)</span> the latent random variables <span class="math">\(\{\bf {z}_i \}\)</span> are
+independent. To mark these conditional independencies in Pyro and do
+subsampling we need to make use of either <code class="docutils literal"><span class="pre">irange</span></code> or <code class="docutils literal"><span class="pre">iarange</span></code> in
+<em>both</em> the model <em>and</em> the guide. Let’s sketch out the basic logic using
+<code class="docutils literal"><span class="pre">irange</span></code> (a more complete piece of code would include <code class="docutils literal"><span class="pre">pyro.param</span></code>
+statements, etc.). First, the model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="c1"># sample the global RV</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pyro</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="s2">&quot;locals&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+        <span class="n">z_i</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;z_i&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+        <span class="c1"># compute the parameter used to define the observation</span>
+        <span class="c1"># likelihood using the local random variable</span>
+        <span class="n">theta_i</span> <span class="o">=</span> <span class="n">compute_something</span><span class="p">(</span><span class="n">z_i</span><span class="p">)</span>
+        <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">dist</span><span class="o">.</span><span class="n">mydist</span><span class="p">,</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta_i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that in contrast to our running coin flip example, here we have
+<code class="docutils literal"><span class="pre">pyro.sample</span></code> statements both inside and outside of the <code class="docutils literal"><span class="pre">irange</span></code>
+context. Next the guide:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="c1"># sample the global RV</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pyro</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="s2">&quot;locals&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="c1"># sample the local RVs</span>
+        <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;z_i&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">lambda_i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that crucially the indices will only be subsampled once in the
+guide; the Pyro backend makes sure that the same set of indices are used
+during execution of the model. For this reason <code class="docutils literal"><span class="pre">subsample_size</span></code> only
+needs to be specified in the guide.</p>
+</div>
+</div>
+<div class="section" id="Amortization">
+<h2>Amortization<a class="headerlink" href="#Amortization" title="Permalink to this headline">¶</a></h2>
+<p>Let’s again consider a model with global and local latent random
+variables and local variational parameters:</p>
+<div class="math">
+\[ p({\bf x}, {\bf z}, \beta) = p(\beta)
+\prod_{i=1}^N p({\bf x}_i | {\bf z}_i) p({\bf z}_i | \beta)  \qquad \qquad
+q({\bf z}, \beta) = q(\beta) \prod_{i=1}^N q({\bf z}_i | \beta, \lambda_i)\]</div>
+<p>For small to medium-sized <span class="math">\(N\)</span> using local variational parameters
+like this can be a good approach. If <span class="math">\(N\)</span> is large, however, the
+fact that the space we’re doing optimization over grows with <span class="math">\(N\)</span>
+can be a real probelm. One way to avoid this nasty growth with the size
+of the dataset is <em>amortization</em>.</p>
+<p>This works as follows. Instead of introducing local variational
+parameters, we’re going to learn a single parametric function
+<span class="math">\(f(\cdot)\)</span> and work with a variational distribution that has the
+form</p>
+<div class="math">
+\[q(\beta) \prod_{n=1}^N q({\bf z}_i | f({\bf x}_i))\]</div>
+<p>The function <span class="math">\(f(\cdot)\)</span>—which basically maps a given observation
+to a set of variational parameters tailored to that datapoint—will need
+to be sufficiently rich to capture the posterior accurately, but now we
+can handle large datasets without having to introduce an obscene number
+of variational parameters. This approach has other benefits too: for
+example, during learning <span class="math">\(f(\cdot)\)</span> effectively allows us to share
+statistical power among different datapoints. Note that this is
+precisely the approach used in the <a class="reference external" href="vae.html">VAE</a>.</p>
+</div>
+<div class="section" id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
+<p>[1] <code class="docutils literal"><span class="pre">Stochastic</span> <span class="pre">Variational</span> <span class="pre">Inference</span></code>, &nbsp;&nbsp;&nbsp;&nbsp; Matthew D. Hoffman, David
+M. Blei, Chong Wang, John Paisley</p>
+<p>[2] <code class="docutils literal"><span class="pre">Auto-Encoding</span> <span class="pre">Variational</span> <span class="pre">Bayes</span></code>,&nbsp;&nbsp;&nbsp;&nbsp; Diederik P Kingma, Max
+Welling</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="svi_part_iii.html" class="btn btn-neutral float-right" title="SVI Part III: ELBO Gradient Estimators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="svi_part_i.html" class="btn btn-neutral" title="SVI Part I: An Introduction to Stochastic Variational Inference in Pyro" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Uber AI Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,889 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bayesian Regression &mdash; Pyro Tutorials  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Pyro Tutorials  documentation" href="index.html"/>
+        <link rel="next" title="Modeling Polyphonic Music with a Deep Markov Model" href="dmm.html"/>
+        <link rel="prev" title="Variational Autoencoders" href="vae.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pyro_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="svi_part_i.html">SVI Part I: An Introduction to Stochastic Variational Inference in Pyro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svi_part_ii.html">SVI Part II: Conditional Independence, Subsampling, and Amortization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svi_part_iii.html">SVI Part III: ELBO Gradient Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vae.html">Variational Autoencoders</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bayesian Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Regression">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Training">Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Bayesian-Regression">Bayesian Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#random_module()"><code class="docutils literal"><span class="pre">random_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Guide">Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Inference">Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Validating-Results">Validating Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dmm.html">Modeling Polyphonic Music with a Deep Markov Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="air.html">Attend Infer Repeat</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pyro Tutorials</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Bayesian Regression</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/bayesian_regression.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Bayesian-Regression">
+<h1>Bayesian Regression<a class="headerlink" href="#Bayesian-Regression" title="Permalink to this headline">¶</a></h1>
+<p>Regression is one of the most common and basic supervised learning tasks
+in machine learning. Suppose we’re given a dataset <span class="math">\(\mathcal{D}\)</span>
+of the form</p>
+<div class="math">
+\[\mathcal{D}  = \{ (X_i, y_i) \} \qquad \text{for}\qquad i=1,2,...,N\]</div>
+<p>The goal of linear regression is to fit a function to the data of the
+form:</p>
+<div class="math">
+\[y = w X + b + \epsilon\]</div>
+<p>where <span class="math">\(w\)</span> and <span class="math">\(b\)</span> are learnable parameters and
+<span class="math">\(\epsilon\)</span> represents observation noise. Specifically <span class="math">\(w\)</span> is
+a matrix of weights and <span class="math">\(b\)</span> is a bias vector.</p>
+<p>Let’s first implement linear regression in PyTorch and learn point
+estimates for the parameters <span class="math">\(w\)</span> and <span class="math">\(b\)</span>. Then we’ll see how
+to incorporate uncertainty into our estimates by using Pyro to implement
+Bayesian linear regression.</p>
+<div class="section" id="Setup">
+<h2>Setup<a class="headerlink" href="#Setup" title="Permalink to this headline">¶</a></h2>
+<p>As always, let’s begin by importing the modules we’ll need.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="kn">as</span> <span class="nn">nn</span>
+
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+
+<span class="kn">import</span> <span class="nn">pyro</span>
+<span class="kn">from</span> <span class="nn">pyro.distributions</span> <span class="kn">import</span> <span class="n">Normal</span>
+<span class="kn">from</span> <span class="nn">pyro.infer</span> <span class="kn">import</span> <span class="n">SVI</span>
+<span class="kn">from</span> <span class="nn">pyro.optim</span> <span class="kn">import</span> <span class="n">Adam</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Data">
+<h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">¶</a></h2>
+<p>We’ll generate a toy dataset with one feature and <span class="math">\(w = 3\)</span> and
+<span class="math">\(b = 1\)</span> as follows:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># size of toy data</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">1</span>    <span class="c1"># number of features</span>
+
+<span class="k">def</span> <span class="nf">build_linear_dataset</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">noise_std</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise_std</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">X</span><span class="p">)),</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Note that we generate the data with a fixed observation noise
+<span class="math">\(\sigma = 0.1\)</span>.</p>
+</div>
+<div class="section" id="Regression">
+<h2>Regression<a class="headerlink" href="#Regression" title="Permalink to this headline">¶</a></h2>
+<p>Now let’s define our regression model in the form of a neural network.
+We’ll use PyTorch’s <code class="docutils literal"><span class="pre">nn.Module</span></code> for this. Our input <span class="math">\(X\)</span> is a
+matrix of size <span class="math">\(N \times p\)</span> and our output <span class="math">\(y\)</span> is a vector
+of size <span class="math">\(p \times 1\)</span>. The function <code class="docutils literal"><span class="pre">nn.Linear(p,</span> <span class="pre">1)</span></code> defines a
+linear transformation of the form <span class="math">\(Xw + b\)</span> where <span class="math">\(w\)</span> is the
+weight matrix and <span class="math">\(b\)</span> is the additive bias.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">class</span> <span class="nc">RegressionModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RegressionModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">regression_model</span> <span class="o">=</span> <span class="n">RegressionModel</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Training">
+<h2>Training<a class="headerlink" href="#Training" title="Permalink to this headline">¶</a></h2>
+<p>We will use the mean squared error (MSE) as our loss and Adam as our
+optimizer. We would like to optimize the parameters of the
+<code class="docutils literal"><span class="pre">regression_model</span></code> neural net above. We will use a somewhat large
+learning rate of <code class="docutils literal"><span class="pre">0.01</span></code> and run for 500 iterations.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(</span><span class="n">size_average</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">optim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">regression_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">build_linear_dataset</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">x_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+        <span class="c1"># run the model forward on the data</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">regression_model</span><span class="p">(</span><span class="n">x_data</span><span class="p">)</span>
+        <span class="c1"># calculate the mse loss</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
+        <span class="c1"># initialize gradients to zero</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="c1"># backpropagate</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="c1"># take a gradient step</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[iteration </span><span class="si">%04d</span><span class="s2">] loss: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="c1"># Inspect learned parameters</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Learned parameters:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">regression_model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()))</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[iteration 0050] loss: 9117.7002
+[iteration 0100] loss: 6319.3657
+[iteration 0150] loss: 4257.1567
+[iteration 0200] loss: 2783.3125
+[iteration 0250] loss: 1765.6473
+[iteration 0300] loss: 1090.0295
+[iteration 0350] loss: 660.5601
+[iteration 0400] loss: 399.9531
+[iteration 0450] loss: 249.3044
+[iteration 0500] loss: 166.4578
+Learned parameters:
+linear.weight: 2.762
+linear.bias: 1.034
+</pre></div></div>
+</div>
+<p><strong>Sample Output</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">iteration</span> <span class="mi">0050</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">4405.9824</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0100</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">2636.4561</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0150</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">1497.4330</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0200</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">811.6588</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0250</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">429.7031</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0300</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">234.2143</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0350</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">142.6732</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0400</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">103.5445</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0450</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">88.2896</span>
+<span class="p">[</span><span class="n">iteration</span> <span class="mi">0500</span><span class="p">]</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">82.8650</span>
+<span class="n">Learned</span> <span class="n">parameters</span><span class="p">:</span>
+<span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="p">:</span> <span class="mf">2.996</span>
+<span class="n">linear</span><span class="o">.</span><span class="n">bias</span><span class="p">:</span> <span class="mf">1.094</span>
+</pre></div>
+</div>
+<p>Not too bad - you can see that the neural net learned parameters that
+were pretty close to the ground truth of <span class="math">\(w = 3, b = 1\)</span>. But how
+confident should we be in these point estimates?</p>
+<p>Bayesian modeling (see
+<a class="reference external" href="http://mlg.eng.cam.ac.uk/zoubin/papers/NatureReprint15.pdf">here</a>
+for an overview) offers a systematic framework for reasoning about model
+uncertainty. Instead of just learning point estimates, we’re going to
+learn a <em>distribution</em> over values of the parameters <span class="math">\(w\)</span> and
+<span class="math">\(b\)</span> that are consistent with the observed data.</p>
+</div>
+<div class="section" id="Bayesian-Regression">
+<h2>Bayesian Regression<a class="headerlink" href="#Bayesian-Regression" title="Permalink to this headline">¶</a></h2>
+<p>In order to make our linear regression Bayesian, we need to put priors
+on the parameters <span class="math">\(w\)</span> and <span class="math">\(b\)</span>. These are distributions that
+represent our prior belief about reasonable values for <span class="math">\(w\)</span> and
+<span class="math">\(b\)</span> (before observing any data).</p>
+<div class="section" id="random_module()">
+<h3><code class="docutils literal"><span class="pre">random_module()</span></code><a class="headerlink" href="#random_module()" title="Permalink to this headline">¶</a></h3>
+<p>In order to do this, we’ll ‘lift’ the parameters <span class="math">\(w\)</span> and <span class="math">\(b\)</span>
+to random variables. We can do this in Pyro via <code class="docutils literal"><span class="pre">random_module()</span></code>,
+which effectively takes a <code class="docutils literal"><span class="pre">nn.Module</span></code> and turns it into a distribution
+over neural networks. Specifically, each parameter in the original
+neural net is sampled from the provided prior. This allows us to
+repurpose vanilla neural nets for use in the Bayesian setting. For
+example:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">mu</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="c1"># define a unit normal prior</span>
+<span class="n">prior</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+<span class="c1"># overload the parameters in the regression nn with samples from the prior</span>
+<span class="n">lifted_module</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">random_module</span><span class="p">(</span><span class="s2">&quot;regression_module&quot;</span><span class="p">,</span> <span class="n">regression_model</span><span class="p">,</span> <span class="n">prior</span><span class="p">)</span>
+<span class="c1"># sample a nn from the prior</span>
+<span class="n">sampled_nn</span> <span class="o">=</span> <span class="n">lifted_module</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Model">
+<h3>Model<a class="headerlink" href="#Model" title="Permalink to this headline">¶</a></h3>
+<p>We now have all the ingredients needed to specify our model. First we
+define priors over <span class="math">\(w\)</span> and <span class="math">\(b\)</span>. Because we’re uncertain
+about the parameters a priori, we’ll use relatively wide priors
+<span class="math">\(\mathcal{N}(\mu = 0, \sigma = 10)\)</span>. Then we wrap
+<code class="docutils literal"><span class="pre">regression_model</span></code> with <code class="docutils literal"><span class="pre">random_module</span></code> and sample an instance of
+the neural net, <code class="docutils literal"><span class="pre">lifted_nn</span></code>. We then run the neural net forward on the
+inputs <code class="docutils literal"><span class="pre">x_data</span></code>. Finally we use the <code class="docutils literal"><span class="pre">pyro.observe</span></code> statement to
+condition on the observed data <code class="docutils literal"><span class="pre">y_data</span></code>. Note that we use the same
+fixed observation</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># Create unit normal priors over the parameters</span>
+    <span class="n">x_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">Variable</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">bias_mu</span><span class="p">,</span> <span class="n">bias_sigma</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">Variable</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">w_prior</span><span class="p">,</span> <span class="n">b_prior</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">),</span> <span class="n">Normal</span><span class="p">(</span><span class="n">bias_mu</span><span class="p">,</span> <span class="n">bias_sigma</span><span class="p">)</span>
+    <span class="n">priors</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linear.weight&#39;</span><span class="p">:</span> <span class="n">w_prior</span><span class="p">,</span> <span class="s1">&#39;linear.bias&#39;</span><span class="p">:</span> <span class="n">b_prior</span><span class="p">}</span>
+    <span class="c1"># lift module parameters to random variables</span>
+    <span class="n">lifted_module</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">random_module</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">regression_model</span><span class="p">,</span> <span class="n">priors</span><span class="p">)</span>
+    <span class="c1"># sample a nn (which also samples w and b)</span>
+    <span class="n">lifted_nn</span> <span class="o">=</span> <span class="n">lifted_module</span><span class="p">()</span>
+    <span class="c1"># run the nn forward</span>
+    <span class="n">latent</span> <span class="o">=</span> <span class="n">lifted_nn</span><span class="p">(</span><span class="n">x_data</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="c1"># condition on the observed data</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs&quot;</span><span class="p">,</span> <span class="n">Normal</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">Variable</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)))),</span>
+                 <span class="n">y_data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Guide">
+<h3>Guide<a class="headerlink" href="#Guide" title="Permalink to this headline">¶</a></h3>
+<p>In order to do inference we’re going to need a guide, i.e.&nbsp;a
+parameterized family of distributions over <span class="math">\(w\)</span> and <span class="math">\(b\)</span>.
+Writing down a guide will proceed in close analogy to the construction
+of our model, with the key difference being that the guide parameters
+need to be trainable. To do this we register the guide parameters in the
+ParamStore using <code class="docutils literal"><span class="pre">pyro.param()</span></code> and make sure each PyTorch
+<code class="docutils literal"><span class="pre">Variable</span></code> has the flag <code class="docutils literal"><span class="pre">requires_grad</span></code> set to <code class="docutils literal"><span class="pre">True</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">softplus</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># define our variational parameters</span>
+    <span class="n">w_mu</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c1"># note that we initialize our sigmas to be pretty narrow</span>
+    <span class="n">w_log_sig</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="o">-</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                         <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">b_mu</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">b_log_sig</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="o">-</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                         <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c1"># register learnable params in the param store</span>
+    <span class="n">mw_param</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;guide_mean_weight&quot;</span><span class="p">,</span> <span class="n">w_mu</span><span class="p">)</span>
+    <span class="n">sw_param</span> <span class="o">=</span> <span class="n">softplus</span><span class="p">(</span><span class="n">pyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;guide_log_sigma_weight&quot;</span><span class="p">,</span> <span class="n">w_log_sig</span><span class="p">))</span>
+    <span class="n">mb_param</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;guide_mean_bias&quot;</span><span class="p">,</span> <span class="n">b_mu</span><span class="p">)</span>
+    <span class="n">sb_param</span> <span class="o">=</span> <span class="n">softplus</span><span class="p">(</span><span class="n">pyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;guide_log_sigma_bias&quot;</span><span class="p">,</span> <span class="n">b_log_sig</span><span class="p">))</span>
+    <span class="c1"># guide distributions for w and b</span>
+    <span class="n">w_dist</span><span class="p">,</span> <span class="n">b_dist</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">mw_param</span><span class="p">,</span> <span class="n">sw_param</span><span class="p">),</span> <span class="n">Normal</span><span class="p">(</span><span class="n">mb_param</span><span class="p">,</span> <span class="n">sb_param</span><span class="p">)</span>
+    <span class="n">dists</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linear.weight&#39;</span><span class="p">:</span> <span class="n">w_dist</span><span class="p">,</span> <span class="s1">&#39;linear.bias&#39;</span><span class="p">:</span> <span class="n">b_dist</span><span class="p">}</span>
+    <span class="c1"># overload the parameters in the module with random samples</span>
+    <span class="c1"># from the guide distributions</span>
+    <span class="n">lifted_module</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">random_module</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">regression_model</span><span class="p">,</span> <span class="n">dists</span><span class="p">)</span>
+    <span class="c1"># sample a nn (which also samples w and b)</span>
+    <span class="k">return</span> <span class="n">lifted_module</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Note that we choose Gaussians for both guide distributions. Also, to
+ensure positivity, we pass each log sigma through a <code class="docutils literal"><span class="pre">softplus()</span></code>
+transformation.</p>
+</div>
+</div>
+<div class="section" id="Inference">
+<h2>Inference<a class="headerlink" href="#Inference" title="Permalink to this headline">¶</a></h2>
+<p>To do inference we’ll use stochastic variational inference (SVI) (for an
+introduction to SVI, see <a class="reference external" href="svi_part_i">SVI Part I</a>). Just like in the
+non-Bayesian linear regression, each iteration in our training loop will
+take a gradient step, with the difference being that in this case, we’ll
+use the ELBO objective instead of the MSE loss.</p>
+<p>The Pyro backend will construct the ELBO objective function for us; this
+logic is handled by the <code class="docutils literal"><span class="pre">SVI</span></code> class:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">optim</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">({</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
+<span class="n">svi</span> <span class="o">=</span> <span class="n">SVI</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">guide</span><span class="p">,</span> <span class="n">optim</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;ELBO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Here <code class="docutils literal"><span class="pre">Adam</span></code> is a thin wrapper around <code class="docutils literal"><span class="pre">torch.optim.Adam</span></code> (see
+<a class="reference external" href="svi_part_i#Optimizers">here</a> for a discussion). The complete
+training loop is as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">clear_param_store</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">build_linear_dataset</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+        <span class="c1"># calculate the loss and take a gradient step</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">svi</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[iteration </span><span class="si">%04d</span><span class="s2">] loss: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loss</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">N</span><span class="p">)))</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[iteration 0001] loss: 9429.8581
+[iteration 0101] loss: 4909.0394
+[iteration 0201] loss: 2658.0862
+[iteration 0301] loss: 1364.2108
+[iteration 0401] loss: 669.0814
+</pre></div></div>
+</div>
+<p>To take an ELBO gradient step we simply call the <code class="docutils literal"><span class="pre">step</span></code> method of
+<code class="docutils literal"><span class="pre">SVI</span></code>. Notice that the <code class="docutils literal"><span class="pre">data</span></code> argument we pass to <code class="docutils literal"><span class="pre">step</span></code> will be
+passed to both <code class="docutils literal"><span class="pre">model()</span></code> and <code class="docutils literal"><span class="pre">guide()</span></code>.</p>
+</div>
+<div class="section" id="Validating-Results">
+<h2>Validating Results<a class="headerlink" href="#Validating-Results" title="Permalink to this headline">¶</a></h2>
+<p>Let’s compare the variational parameters we learned to our previous
+result:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pyro</span><span class="o">.</span><span class="n">get_param_store</span><span class="p">()</span><span class="o">.</span><span class="n">get_all_param_names</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">]: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[guide_log_sigma_weight]: -3.261
+[guide_log_sigma_bias]: -3.522
+[guide_mean_weight]: 2.446
+[guide_mean_bias]: 1.001
+</pre></div></div>
+</div>
+<p><strong>Sample Output</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">guide_log_sigma_weight</span><span class="p">]:</span> <span class="o">-</span><span class="mf">3.217</span>
+<span class="p">[</span><span class="n">guide_log_sigma_bias</span><span class="p">]:</span> <span class="o">-</span><span class="mf">3.164</span>
+<span class="p">[</span><span class="n">guide_mean_weight</span><span class="p">]:</span> <span class="mf">2.966</span>
+<span class="p">[</span><span class="n">guide_mean_bias</span><span class="p">]:</span> <span class="mf">0.941</span>
+</pre></div>
+</div>
+<p>As you can see, the means of our parameter estimates are pretty close to
+the values we previously learned. Now, however, instead of just point
+estimates, the parameters <code class="docutils literal"><span class="pre">guide_log_sigma_weight</span></code> and
+<code class="docutils literal"><span class="pre">guide_log_sigma_bias</span></code> provide us with uncertainty estimates. (Note
+that the sigmas are in log-space here, so the more negative the value,
+the narrower the width).</p>
+<p>Finally, let’s evaluate our model by checking its predictive accuracy on
+new test data. This is known as <em>point evaluation</em>. We’ll sample 20
+neural nets from our posterior and run them on the new test data, then
+average across their predictions and calculate the MSE of the predicted
+values compared to the ground truth.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">X</span><span class="p">)),</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">y_preds</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="c1"># guide does not require the data</span>
+    <span class="n">sampled_nn</span> <span class="o">=</span> <span class="n">guide</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+    <span class="c1"># run the nn and add to total</span>
+    <span class="n">y_preds</span> <span class="o">=</span> <span class="n">y_preds</span> <span class="o">+</span> <span class="n">sampled_nn</span><span class="p">(</span><span class="n">x_data</span><span class="p">)</span>
+<span class="c1"># take the average of the predictions</span>
+<span class="n">y_preds</span> <span class="o">=</span> <span class="n">y_preds</span> <span class="o">/</span> <span class="mi">20</span>
+<span class="k">print</span> <span class="s2">&quot;Loss: &quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">(</span><span class="n">y_preds</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Loss:  13.1490249634
+</pre></div></div>
+</div>
+<p><strong>Sample Output</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Loss</span><span class="p">:</span>  <span class="mf">0.0310659464449</span>
+</pre></div>
+</div>
+<p>See the full code on
+<a class="reference external" href="https://github.com/uber/pyro/blob/dev/examples/bayesian_regression.py">Github</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dmm.html" class="btn btn-neutral float-right" title="Modeling Polyphonic Music with a Deep Markov Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vae.html" class="btn btn-neutral" title="Variational Autoencoders" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Uber AI Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
