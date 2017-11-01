@@ -74,7 +74,7 @@
     "\n",
     "Inference in performed in this model using [amortized variational inference](http://pyro.ai/examples/svi_part_i.html). The parameters of the neural network are also optimized during inference. Performing inference in such rich models is always difficult, but the presence of discrete choices (the number of steps in this case) makes inference in this model particularly tricky. For this reason the authors use a technique called data dependent baselines to achieve good performance. This technique can be implemented in Pyro, and we'll see how later in the tutorial.\n",
     "\n",
-    "## The Model\n",
+    "## Model\n",
     "\n",
     "### Generating a single object\n",
     "\n",
@@ -386,7 +386,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## The Guide\n",
+    "## Guide\n",
     "\n",
     "Following [1] we will perform [amortized variational inference](http://pyro.ai/examples/svi_part_i.html) in this model. Pyro provides general purpose machinery that implements most of this inference strategy, but as we have seen in earlier tutorials we are required to provide a model specific guide. What we call a guide in Pyro is exactly the entity called the \"inference network\" in the paper.\n",
     "\n",
@@ -707,21 +707,21 @@
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python",
+   "display_name": "Python 2",
    "language": "python",
-   "name": "python"
+   "name": "python2"
   },
   "language_info": {
    "codemirror_mode": {
     "name": "ipython",
-    "version": 3
+    "version": 2
    },
    "file_extension": ".py",
    "mimetype": "text/x-python",
    "name": "python",
    "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.6.2"
+   "pygments_lexer": "ipython2",
+   "version": "2.7.13"
   }
  },
  "nbformat": 4,

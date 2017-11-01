@@ -29,7 +29,7 @@
     "\n",
     "Let's start with the easiest case.\n",
     "\n",
-    "## The Easiest Case: Reparameterizable Random Variables\n",
+    "## Easy Case: Reparameterizable Random Variables\n",
     "\n",
     "Suppose that we can reparameterize things such that \n",
     "\n",
@@ -43,7 +43,7 @@
     "\n",
     "Assuming $f(\\cdot)$ and $g(\\cdot)$ are sufficiently smooth, we can now get unbiased estimates of the gradient of interest by taking a Monte Carlo estimate of this expectation.\n",
     "\n",
-    "## The Trickier Case: Non-reparameterizable Random Variables\n",
+    "## Tricky Case: Non-reparameterizable Random Variables\n",
     "\n",
     "What if we can't do the above reparameterization? Unfortunately this is the case for many distributions of interest, for example all discrete distributions. In this case our estimator takes a bit more complicated form.\n",
     "\n",
@@ -234,9 +234,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "from __future__ import print_function\n",

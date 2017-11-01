@@ -56,9 +56,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Pyro Tutorials
+            <a href="index.html">
           
 
+          
+            
+            <img src="_static/pyro_logo_small.png" class="logo" />
           
           </a>
 
@@ -92,8 +95,8 @@
 <li class="toctree-l1"><a class="reference internal" href="svi_part_ii.html">SVI Part II: Conditional Independence, Subsampling, and Amortization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SVI Part III: ELBO Gradient Estimators</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#The-Easiest-Case:-Reparameterizable-Random-Variables">The Easiest Case: Reparameterizable Random Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#The-Trickier-Case:-Non-reparameterizable-Random-Variables">The Trickier Case: Non-reparameterizable Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Easy-Case:-Reparameterizable-Random-Variables">Easy Case: Reparameterizable Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Tricky-Case:-Non-reparameterizable-Random-Variables">Tricky Case: Non-reparameterizable Random Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Variance-or-Why-I-Wish-I-Was-Doing-MLE-Deep-Learning">Variance or Why I Wish I Was Doing MLE Deep Learning</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Reducing-Variance-via-Dependency-Structure">Reducing Variance via Dependency Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Aside:-Dependency-tracking-in-Pyro">Aside: Dependency tracking in Pyro</a></li>
@@ -405,8 +408,8 @@ between <span class="math">\(\theta\)</span> and <span class="math">\(\phi\)</sp
 f_{\phi}({\bf z}) \right]\]</div>
 <p>Let’s start with the easiest case.</p>
 </div>
-<div class="section" id="The-Easiest-Case:-Reparameterizable-Random-Variables">
-<h2>The Easiest Case: Reparameterizable Random Variables<a class="headerlink" href="#The-Easiest-Case:-Reparameterizable-Random-Variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Easy-Case:-Reparameterizable-Random-Variables">
+<h2>Easy Case: Reparameterizable Random Variables<a class="headerlink" href="#Easy-Case:-Reparameterizable-Random-Variables" title="Permalink to this headline">¶</a></h2>
 <p>Suppose that we can reparameterize things such that</p>
 <div class="math">
 \[\mathbb{E}_{q_{\phi}({\bf z})} \left [f_{\phi}({\bf z}) \right]
@@ -424,8 +427,8 @@ the expectation to get</p>
 we can now get unbiased estimates of the gradient of interest by taking
 a Monte Carlo estimate of this expectation.</p>
 </div>
-<div class="section" id="The-Trickier-Case:-Non-reparameterizable-Random-Variables">
-<h2>The Trickier Case: Non-reparameterizable Random Variables<a class="headerlink" href="#The-Trickier-Case:-Non-reparameterizable-Random-Variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Tricky-Case:-Non-reparameterizable-Random-Variables">
+<h2>Tricky Case: Non-reparameterizable Random Variables<a class="headerlink" href="#Tricky-Case:-Non-reparameterizable-Random-Variables" title="Permalink to this headline">¶</a></h2>
 <p>What if we can’t do the above reparameterization? Unfortunately this is
 the case for many distributions of interest, for example all discrete
 distributions. In this case our estimator takes a bit more complicated
