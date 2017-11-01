@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyro.infer.abstract_infer &mdash; Pyro 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Pyro 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="pyro" href="../../pyro.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Pyro
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../primitives.html">Primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distributions.html">Distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../nn.html">Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization.html">Optimization</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pyro</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pyro.html">pyro</a> &raquo;</li>
+        
+      <li>pyro.infer.abstract_infer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyro.infer.abstract_infer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pyro.poutine</span> <span class="k">import</span> <span class="n">Poutine</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># overload call function here?</span>
+
+
+<div class="viewcode-block" id="AbstractInfer"><a class="viewcode-back" href="../../../pyro.infer.html#pyro.infer.abstract_infer.AbstractInfer">[docs]</a><span class="k">class</span> <span class="nc">AbstractInfer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Infer class must implement: _pyro_sample, _pyro_observe,</span>
+<span class="sd">    _pyro_on_exit, _pyro_param, _pyro_map_data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<span class="c1"># extend Poutine -- switch to this context when appropriate</span>
+
+
+<div class="viewcode-block" id="LWCopoutine"><a class="viewcode-back" href="../../../pyro.infer.html#pyro.infer.abstract_infer.LWCopoutine">[docs]</a><span class="k">class</span> <span class="nc">LWCopoutine</span><span class="p">(</span><span class="n">Poutine</span><span class="p">):</span>
+    <span class="c1"># every time</span>
+    <span class="k">def</span> <span class="nf">_enter_poutine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When model execution begins</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">_pyro_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev_val</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simply sample from distribution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">dist</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pyro_observe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev_val</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get log_pdf of sample, add to ongoing scoring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logp</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">log_pdf</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">+=</span> <span class="n">logp</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+<div class="viewcode-block" id="LikelihoodWeighting"><a class="viewcode-back" href="../../../pyro.infer.html#pyro.infer.abstract_infer.LikelihoodWeighting">[docs]</a><span class="k">class</span> <span class="nc">LikelihoodWeighting</span><span class="p">(</span><span class="n">AbstractInfer</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call parent class initially, then setup the couroutines to run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># initialize</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LikelihoodWeighting</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># wrap the model function with a LWCoupoutine</span>
+        <span class="c1"># this will push and pop state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LWCopoutine</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1"># defining here, but will be updated at runner time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="LikelihoodWeighting.runner"><a class="viewcode-back" href="../../../pyro.infer.html#pyro.infer.abstract_infer.LikelihoodWeighting.runner">[docs]</a>    <span class="k">def</span> <span class="nf">runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Main function of an Infer object, automatically switches context with copoutine</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># setup sample to hold</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+            <span class="c1"># push and pop stack handled by copoutine</span>
+            <span class="c1"># What about models which take inputs?</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="c1"># add to sample state</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">rv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">current_score</span><span class="p">])</span>
+
+        <span class="c1"># send back array of samples to be consumed elsewhere</span>
+        <span class="k">return</span> <span class="n">samples</span></div></div>
+
+<span class="c1">#</span>
+<span class="c1"># class LWMarginal(object):</span>
+<span class="c1">#   # takes a trace distribution and consumes</span>
+<span class="c1">#   def __call__(trace_dist, num_samples, *args, **kwargs):</span>
+<span class="c1">#     # grab num samples from the trace dist, then consume</span>
+<span class="c1"># 	  concrete = trace_dist.runner(num_samples)</span>
+
+
+<div class="viewcode-block" id="lw_expectation"><a class="viewcode-back" href="../../../pyro.infer.html#pyro.infer.abstract_infer.lw_expectation">[docs]</a><span class="k">def</span> <span class="nf">lw_expectation</span><span class="p">(</span><span class="n">trace_dist</span><span class="p">,</span> <span class="n">functional</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">):</span>
+    <span class="c1"># running var</span>
+    <span class="n">accum_so_far</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">sum_weight</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="c1"># sample from trace_dist</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">trace_dist</span><span class="o">.</span><span class="n">runner</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+
+    <span class="c1"># loop over the sample tuples</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rv</span><span class="p">,</span> <span class="n">cur_score</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+
+        <span class="c1"># not necessarily efficient torch.exp call x2, fix later</span>
+        <span class="n">sum_weight</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">cur_score</span><span class="p">)</span>
+
+        <span class="c1"># apply function to return value, multiply by exp(cur_score)</span>
+        <span class="n">accum_so_far</span> <span class="o">+=</span> <span class="n">functional</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">cur_score</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="k">return</span> <span class="n">accum_so_far</span> <span class="o">/</span> <span class="n">sum_weight</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Uber AI Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

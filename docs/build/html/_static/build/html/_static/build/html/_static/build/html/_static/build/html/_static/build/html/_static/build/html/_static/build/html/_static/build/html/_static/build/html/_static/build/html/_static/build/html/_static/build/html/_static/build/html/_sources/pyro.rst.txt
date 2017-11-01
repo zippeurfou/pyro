@@ -1,0 +1,34 @@
+pyro package
+============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pyro.distributions
+    pyro.infer
+    pyro.nn
+    pyro.optim
+    pyro.params
+    pyro.poutine
+
+Submodules
+----------
+
+pyro\.util module
+-----------------
+
+.. automodule:: pyro.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pyro
+    :members:
+    :undoc-members:
+    :show-inheritance:

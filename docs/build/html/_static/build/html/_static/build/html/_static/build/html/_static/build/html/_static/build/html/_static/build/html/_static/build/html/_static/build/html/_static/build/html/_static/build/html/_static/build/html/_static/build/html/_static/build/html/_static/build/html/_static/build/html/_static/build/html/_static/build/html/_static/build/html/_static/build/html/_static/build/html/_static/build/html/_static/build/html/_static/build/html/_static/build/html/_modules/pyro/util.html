@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyro.util &mdash; Pyro 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Pyro 0.0.1 documentation" href="../../index.html"/>
+        <link rel="up" title="pyro" href="../pyro.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Pyro
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../primitives.html">Primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../distributions.html">Distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization.html">Optimization</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pyro</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../pyro.html">pyro</a> &raquo;</li>
+        
+      <li>pyro.util</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyro.util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="k">import</span> <span class="n">Variable</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="k">import</span> <span class="n">Parameter</span>
+
+
+<span class="k">def</span> <span class="nf">_dict_to_tuple</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively converts a dictionary to a list of key-value tuples</span>
+<span class="sd">    Only intended for use as a helper function inside memoize!!</span>
+<span class="sd">    May break when keys cant be sorted, but that is not an expected use-case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">_dict_to_tuple</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+
+<div class="viewcode-block" id="memoize"><a class="viewcode-back" href="../../pyro.html#pyro.util.memoize">[docs]</a><span class="k">def</span> <span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    https://stackoverflow.com/questions/1988804/what-is-memoization-and-how-can-i-use-it-in-python</span>
+<span class="sd">    unbounded memoize</span>
+<span class="sd">    alternate in py3: https://docs.python.org/3/library/functools.html</span>
+<span class="sd">    lru_cache</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_mem</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs_tuple</span> <span class="o">=</span> <span class="n">_dict_to_tuple</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs_tuple</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_mem</span><span class="p">:</span>
+            <span class="n">_mem</span><span class="p">[(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs_tuple</span><span class="p">)]</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_mem</span><span class="p">[(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs_tuple</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">_fn</span></div>
+
+
+<div class="viewcode-block" id="ones"><a class="viewcode-back" href="../../pyro.html#pyro.util.ones">[docs]</a><span class="k">def</span> <span class="nf">ones</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="zeros"><a class="viewcode-back" href="../../pyro.html#pyro.util.zeros">[docs]</a><span class="k">def</span> <span class="nf">zeros</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ng_ones"><a class="viewcode-back" href="../../pyro.html#pyro.util.ng_ones">[docs]</a><span class="k">def</span> <span class="nf">ng_ones</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ng_zeros"><a class="viewcode-back" href="../../pyro.html#pyro.util.ng_zeros">[docs]</a><span class="k">def</span> <span class="nf">ng_zeros</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="log_sum_exp"><a class="viewcode-back" href="../../pyro.html#pyro.util.log_sum_exp">[docs]</a><span class="k">def</span> <span class="nf">log_sum_exp</span><span class="p">(</span><span class="n">vecs</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vecs</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">vecs</span> <span class="o">=</span> <span class="n">vecs</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vecs</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">max_score</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">vecs</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">max_score</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">vecs</span> <span class="o">-</span> <span class="n">max_score</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">vecs</span><span class="p">))))</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="zero_grads"><a class="viewcode-back" href="../../pyro.html#pyro.util.zero_grads">[docs]</a><span class="k">def</span> <span class="nf">zero_grads</span><span class="p">(</span><span class="n">tensors</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets gradients of list of Variables to zero in place</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">volatile</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">new</span><span class="p">()</span><span class="o">.</span><span class="n">resize_as_</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">zero_</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="log_gamma"><a class="viewcode-back" href="../../pyro.html#pyro.util.log_gamma">[docs]</a><span class="k">def</span> <span class="nf">log_gamma</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+        <span class="n">ttype</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">ttype</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">type</span><span class="p">()</span>
+    <span class="n">gamma_coeff</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mf">76.18009172947146</span><span class="p">,</span>
+        <span class="o">-</span><span class="mf">86.50532032941677</span><span class="p">,</span>
+        <span class="mf">24.01409824083091</span><span class="p">,</span>
+        <span class="o">-</span><span class="mf">1.231739572450155</span><span class="p">,</span>
+        <span class="mf">0.1208650973866179e-2</span><span class="p">,</span>
+        <span class="o">-</span><span class="mf">0.5395239384953e-5</span>
+    <span class="p">]</span>
+    <span class="n">magic1</span> <span class="o">=</span> <span class="mf">1.000000000190015</span>
+    <span class="n">magic2</span> <span class="o">=</span> <span class="mf">2.5066282746310005</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xx</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">5.5</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">ser</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">ttype</span><span class="p">))</span> <span class="o">*</span> <span class="n">magic1</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">gamma_coeff</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1.0</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ser</span> <span class="o">*</span> <span class="n">magic2</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span></div>
+
+
+<div class="viewcode-block" id="to_one_hot"><a class="viewcode-back" href="../../pyro.html#pyro.util.to_one_hot">[docs]</a><span class="k">def</span> <span class="nf">to_one_hot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+        <span class="n">ttype</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">ttype</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="p">()</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># create an empty array for one-hots</span>
+    <span class="n">batch_one_hot</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">classes</span><span class="p">)</span>
+    <span class="c1"># this operation writes ones where needed</span>
+    <span class="n">batch_one_hot</span><span class="o">.</span><span class="n">scatter_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Variable</span><span class="p">(</span><span class="n">batch_one_hot</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">ttype</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="tensor_histogram"><a class="viewcode-back" href="../../pyro.html#pyro.util.tensor_histogram">[docs]</a><span class="k">def</span> <span class="nf">tensor_histogram</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">vs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    make a histogram from weighted Variable/Tensor/ndarray samples</span>
+<span class="sd">    Horribly slow...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># first, get everything into the same form: numpy arrays</span>
+    <span class="n">np_vs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vs</span><span class="p">:</span>
+        <span class="n">_v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_v</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+            <span class="n">_v</span> <span class="o">=</span> <span class="n">_v</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_v</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="n">_v</span> <span class="o">=</span> <span class="n">_v</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">np_vs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_v</span><span class="p">)</span>
+    <span class="c1"># now form the histogram</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">np_v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">vs</span><span class="p">,</span> <span class="n">np_vs</span><span class="p">):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np_v</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hist</span><span class="p">:</span>
+            <span class="c1"># XXX should clone?</span>
+            <span class="n">hist</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span>
+        <span class="n">hist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">p</span>
+    <span class="c1"># now split into keys and original values</span>
+    <span class="n">ps2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vs2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">hist</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">ps2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">vs2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># return dict suitable for passing into Categorical</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;ps&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">ps2</span><span class="p">),</span> <span class="s2">&quot;vs&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vs2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()}</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Uber AI Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
