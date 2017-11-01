@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Variational Autoencoders &mdash; Pyro Tutorials  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Pyro Tutorials  documentation" href="index.html"/>
+        <link rel="next" title="Bayesian Regression" href="bayesian_regression.html"/>
+        <link rel="prev" title="SVI Part III: ELBO Gradient Estimators" href="svi_part_iii.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Pyro Tutorials
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="svi_part_i.html">SVI Part I: An Introduction to Stochastic Variational Inference in Pyro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svi_part_ii.html">SVI Part II: Conditional Independence, Subsampling, and Amortization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svi_part_iii.html">SVI Part III: ELBO Gradient Estimators</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Variational Autoencoders</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#A-VAE-in-Pyro">A VAE in Pyro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Inference">Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Sample-results-[COMPLETE]">Sample results [COMPLETE]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#References">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_regression.html">Bayesian Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dmm.html">Modeling Polyphonic Music with a Deep Markov Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="air.html">Attend Infer Repeat</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pyro Tutorials</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Variational Autoencoders</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/vae.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Variational-Autoencoders">
+<h1>Variational Autoencoders<a class="headerlink" href="#Variational-Autoencoders" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
+<p>The variational autoencoder (VAE) is arguably the simplest setup that
+realizes deep probabilistic modeling. Note that we’re being careful in
+our choice of language here. The VAE isn’t a model as such—rather the
+VAE is a particular setup for doing variational inference for a certain
+class of models. The class of models is quite broad: basically any
+(unsupervised) density estimator with latent random variables. The basic
+structure of such a model is simple, almost deceptively so (see Fig. 1).</p>
+<figure><figcaption><p>Figure 1: the class of deep models we’re interested in; the joint
+probability density is given by
+<span class="math">\(p_\theta({\bf x},{\bf z})=p_\theta({\bf x}|{\bf z}) p({\bf z})\)</span></p>
+</figcaption></figure><p>Here we’ve depicted the structure of the kind of model we’re interested
+in as a graphical model. We have <span class="math">\(N\)</span> observed datapoints
+<span class="math">\(\{ \bf x_i \}\)</span>. Each datapoint is generated by a (local) latent
+random variable <span class="math">\(\bf z_i\)</span>. There is also a parameter
+<span class="math">\(\theta\)</span>, which is global in the sense that all the datapoints
+depend on it (which is why it’s drawn outside the rectangle). Note that
+since <span class="math">\(\theta\)</span> is a parameter, it’s not something we’re being
+Bayesian about. Finally, what’s of particular importance here is that we
+allow for each <span class="math">\(\bf x_i\)</span> to depend on <span class="math">\(\bf z_i\)</span> in a
+complex, non-linear way. In practice this dependency will be
+parameterized by a (deep) neural network with parameters <span class="math">\(\theta\)</span>.
+It’s this non-linearity that makes inference for this class of models
+particularly challenging.</p>
+<p>Of course this non-linear structure is also one reason why this class of
+models offers a very flexible approach to modeling complex data. Indeed
+it’s worth emphasizing that each of the components of the model can be
+‘reconfigured’ in a variety of different ways. For example:</p>
+<ul class="simple">
+<li>the neural network in <span class="math">\(p_\theta({\bf x} | {\bf z})\)</span> can be
+varied in all the usual ways (number of layers, type of
+non-linearities, number of hidden units, etc.)</li>
+<li>we can choose observation likelihoods that suit the dataset at hand:
+gaussian, bernoulli, categorical, etc.</li>
+<li>we can choose the number of dimensions in the latent space</li>
+</ul>
+<p>The graphical model representation is a useful way to think about the
+structure of the model, but it can also be fruitful to look at an
+explicit factorization of the joint probability density:</p>
+<div class="math">
+\[p({\bf x}, {\bf z}) = \prod_{i=1}^N p_\theta({\bf x}_i | {\bf z}_i) p({\bf z}_i)\]</div>
+<p>The fact that <span class="math">\(p({\bf x}, {\bf z})\)</span> breaks up into a product of
+terms like this makes it clear what me mean when we call <span class="math">\(\bf z_i\)</span>
+a local random variable. For any particular <span class="math">\(i\)</span>, only the single
+datapoint <span class="math">\(\bf x_i\)</span> depends on <span class="math">\(\bf z_i\)</span>. As such the
+<span class="math">\(\{\bf z_i\}\)</span> describe local structure, i.e.&nbsp;structure that is
+private to each data point. This factorized structure also means that we
+can do subsampling during the course of learning. As such this sort of
+model is amenable to the large data setting. (For more discussion on
+this and related topics see <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part
+II</a>.)</p>
+<p>So much for the model. Since the observations depend on the latent
+random variables in a complicated, non-linear way, we expect the
+posterior over the latents to have a complex structure. Consequently in
+order to do inference in this model we need to specify a flexibly family
+of guides (i.e.&nbsp;variational distributions). Since we want to be able to
+scale to large datasets, our guide is going to make use of amortization
+to keep the number of variational parameters under control (see <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI
+Part II</a> for a somewhat
+more general discussion of amortization).</p>
+<p>Recall that the job of the guide is to ‘guess’ good values for the
+latent random variables—good in the sense that they’re true to the model
+prior <em>and</em> true to the data. If we weren’t making use of amortization,
+we would introduce variational parameters <span class="math">\(\{ \lambda_i \}\)</span> for
+<em>each</em> datapoint <span class="math">\(\bf x_i\)</span>. These variational parameters would
+represent our belief about ‘good’ values of <span class="math">\(\bf z_i\)</span>; for
+example, they could encode the mean and variance of a gaussian
+distribution in <span class="math">\({\bf z}_i\)</span> space. Amortization means that, rather
+than introducing variational parameters <span class="math">\(\{ \lambda_i \}\)</span>, we
+instead learn a <em>function</em> that maps each <span class="math">\(\bf x_i\)</span> to an
+appropriate <span class="math">\(\lambda_i\)</span>. Since we need this function to be
+flexible, we parameterize it as a neural network. We thus end up with a
+parameterized family of distributions over the latent <span class="math">\(\bf z\)</span>
+space that can be instantiated for all <span class="math">\(N\)</span> datapoint
+<span class="math">\({\bf x}_i\)</span> (see Fig. 2).</p>
+<figure><figcaption><p>Figure 2: a graphical representation of the guide
+<span class="math">\(q_{\phi}({\bf z} | {\bf x})\)</span></p>
+</figcaption></figure><p>Note that the guide <span class="math">\(q_{\phi}({\bf z} | {\bf x})\)</span> is parameterized
+by a global parameter <span class="math">\(\phi\)</span> shared by all the datapoints. The
+goal of inference will be to find ‘good’ values for <span class="math">\(\theta\)</span> and
+<span class="math">\(\phi\)</span> so that two conditions are satisfied:</p>
+<ul class="simple">
+<li>the log evidence <span class="math">\(\log p_\theta({\bf x})\)</span> is large. this means
+our model is a good fit to the data</li>
+<li>the guide <span class="math">\(q_{\phi}({\bf z} | {\bf x})\)</span> provides a good
+approximation to the posterior</li>
+</ul>
+<p>(For an introduction to stochastic variational inference see <a class="reference external" href="http://pyro.ai/examples/svi_part_i.html">SVI Part
+I</a>.)</p>
+<p>At this point we can zoom out and consider the high level structure of
+our setup. For concreteness, let’s suppose the <span class="math">\(\{ \bf x_i \}\)</span> are
+images so that the model is a generative model of images. Once we’ve
+learned a good value of <span class="math">\(\theta\)</span> we can generate images from the
+model as follows:</p>
+<ul class="simple">
+<li>sample <span class="math">\(\bf z\)</span> according to the prior <span class="math">\(p({\bf z})\)</span></li>
+<li>sample <span class="math">\(\bf x\)</span> according to the likelihood
+<span class="math">\(p_\theta({\bf x}|{\bf z})\)</span></li>
+</ul>
+<p>Each image is being represented by a latent code <span class="math">\(\bf z\)</span> and that
+code gets mapped to images using the likelihood, which depends on the
+<span class="math">\(\theta\)</span> we’ve learned. This is why the likelihood is often called
+the decoder in this context: its job is to decode <span class="math">\(\bf z\)</span> into
+<span class="math">\(\bf x\)</span>. Note that since this is a probabilistic model, there is
+uncertainty about the <span class="math">\(\bf z\)</span> that encodes a given datapoint
+<span class="math">\(\bf x\)</span>.</p>
+<p>Once we’ve learned good values for <span class="math">\(\theta\)</span> and <span class="math">\(\phi\)</span> we
+can also go through the following exercise.</p>
+<ul class="simple">
+<li>we start with a given image <span class="math">\(\bf x\)</span></li>
+<li>using our guide we encode it as <span class="math">\(\bf z\)</span></li>
+<li>using the model likelihood we decode <span class="math">\(\bf z\)</span> and get a
+reconstructed image <span class="math">\({\bf x}_\rm{reco}\)</span></li>
+</ul>
+<p>If we’ve learned good values for <span class="math">\(\theta\)</span> and <span class="math">\(\phi\)</span>,
+<span class="math">\(\bf x\)</span> and <span class="math">\({\bf x}_\rm{reco}\)</span> should be similar. This
+should clarify how the word autoencoder ended up being used to describe
+this setup: the model is the decoder and the guide is the encoder.
+Together, they can be thought of as an autoencoder.</p>
+</div>
+<div class="section" id="A-VAE-in-Pyro">
+<h2>A VAE in Pyro<a class="headerlink" href="#A-VAE-in-Pyro" title="Permalink to this headline">¶</a></h2>
+<p>So much for preliminaries. Let’s see how we implement a VAE in Pyro. The
+dataset we’re going to model is MNIST, a collection of images of
+handwritten digits. Since this is a popular benchmark dataset, we can
+make use of PyTorch’s convenient data loader functionalities to reduce
+the amount of boilerplate code we need to write:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision.datasets</span> <span class="kn">as</span> <span class="nn">dset</span>
+<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="kn">as</span> <span class="nn">transforms</span>
+
+<span class="c1"># for loading and batching MNIST dataset</span>
+<span class="k">def</span> <span class="nf">setup_data_loaders</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="s1">&#39;./data&#39;</span>
+    <span class="n">download</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">trans</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()</span>
+    <span class="n">train_set</span> <span class="o">=</span> <span class="n">dset</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">trans</span><span class="p">,</span>
+                           <span class="n">download</span><span class="o">=</span><span class="n">download</span><span class="p">)</span>
+    <span class="n">test_set</span> <span class="o">=</span> <span class="n">dset</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">trans</span><span class="p">)</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;num_workers&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;pin_memory&#39;</span><span class="p">:</span> <span class="n">use_cuda</span><span class="p">}</span>
+    <span class="n">train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">train_set</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">test_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">test_set</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">test_loader</span>
+</pre></div>
+</div>
+<p>The main thing to draw attention to here is that we use
+<code class="docutils literal"><span class="pre">transforms.ToTensor()</span></code> to normalize the pixel intensities to the
+range <span class="math">\([0.0, 1.0]\)</span>.</p>
+<p>Next we define a PyTorch module that encapsulates our decoder network:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Decoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Decoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># setup the three linear transformations used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">z_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc21</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc22</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
+        <span class="c1"># setup the non-linearity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">softplus</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="c1"># define the forward computation on the latent z</span>
+        <span class="c1"># first compute the hidden units</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+        <span class="c1"># return the mean vector and square root covariance</span>
+        <span class="c1"># each is of size batch_size x 784</span>
+        <span class="n">mu_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc21</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span>
+        <span class="n">sigma_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc22</span><span class="p">(</span><span class="n">hidden</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">mu_img</span><span class="p">,</span> <span class="n">sigma_img</span>
+</pre></div>
+</div>
+<p>Given a latent code <span class="math">\(z\)</span>, the forward call of <code class="docutils literal"><span class="pre">Decoder</span></code> returns
+the parameters for a (diagonal) gaussian distribution in image space.
+Since each image is of size <span class="math">\(28\times28=784\)</span>, <code class="docutils literal"><span class="pre">mu_img</span></code> and
+<code class="docutils literal"><span class="pre">sigma_img</span></code> are each of size <code class="docutils literal"><span class="pre">batch_size</span></code> x 784.</p>
+<p>Next we define a PyTorch module that encapsulates our encoder network:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Encoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Encoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># setup the three linear transformations used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc21</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc22</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span>
+        <span class="c1"># setup the non-linearity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">softplus</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># define the forward computation on the image x</span>
+        <span class="c1"># first shape the mini-batch to have pixels</span>
+        <span class="c1"># in the rightmost dimension</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
+        <span class="c1"># then compute the hidden units</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="c1"># then return a mean vector</span>
+        <span class="n">z_mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc21</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span>
+        <span class="c1"># and a (positive) square root covariance</span>
+        <span class="n">z_sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc22</span><span class="p">(</span><span class="n">hidden</span><span class="p">))</span>
+        <span class="c1"># each of size batch_size x z_dim</span>
+        <span class="k">return</span> <span class="n">z_mu</span><span class="p">,</span> <span class="n">z_sigma</span>
+</pre></div>
+</div>
+<p>Given an image <span class="math">\(\bf x\)</span> the forward call of <code class="docutils literal"><span class="pre">Encoder</span></code> returns a
+mean and covariance that together parameterize a distribution in latent
+space.</p>
+<p>With our encoder and decoder networks in hand, we can now write down the
+stochastic functions that represent our model and guide. First the
+model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># register PyTorch module `decoder` with Pyro</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="s2">&quot;decoder&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">)</span>
+
+    <span class="c1"># setup hyperparameters for prior p(z)</span>
+    <span class="c1"># the type_as ensures we get CUDA Tensors if x is on gpu</span>
+    <span class="n">z_mu</span> <span class="o">=</span> <span class="n">ng_zeros</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span><span class="p">],</span> <span class="n">type_as</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">z_sigma</span> <span class="o">=</span> <span class="n">ng_ones</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span><span class="p">],</span> <span class="n">type_as</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="c1"># sample from prior</span>
+    <span class="c1"># (value will be sampled by guide when computing the ELBO)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;latent&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span> <span class="n">z_mu</span><span class="p">,</span> <span class="n">z_sigma</span><span class="p">)</span>
+
+    <span class="c1"># decode the latent code z</span>
+    <span class="n">mu_img</span><span class="p">,</span> <span class="n">sigma_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="c1"># score against actual images</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;obs&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span> <span class="n">mu_img</span><span class="p">,</span> <span class="n">sigma_img</span><span class="p">,</span>
+                 <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal"><span class="pre">model()</span></code> is a callable that takes in a mini-batch of images
+<code class="docutils literal"><span class="pre">x</span></code> as input. This is a PyTorch <code class="docutils literal"><span class="pre">Variable</span></code> of size <code class="docutils literal"><span class="pre">batch_size</span></code> x
+784.</p>
+<p>The first thing we do inside of <code class="docutils literal"><span class="pre">model()</span></code> is register the (previously
+instantiated) decoder module with Pyro. Note that we give it an
+appropriate (and unique) name. This call to <code class="docutils literal"><span class="pre">pyro.module</span></code> lets Pyro
+know about all the parameters inside of the decoder network.</p>
+<p>Next we setup the hyperparameters for our prior, which is just a unit
+normal gaussian distribution. Note that - we use the helper functions
+<code class="docutils literal"><span class="pre">ng_zeros</span></code> and <code class="docutils literal"><span class="pre">ng_ones</span></code>, which return PyTorch <code class="docutils literal"><span class="pre">Variable</span></code>s with
+<code class="docutils literal"><span class="pre">requires_grad=False</span></code>. these hyperparemeters are fixed and should not
+be trained! - since we’re processing an entire mini-batch of images, we
+need the leftmost dimension of <code class="docutils literal"><span class="pre">z_mu</span></code> and <code class="docutils literal"><span class="pre">z_sigma</span></code> to equal the
+mini-batch size - in case we’re on GPU, we use <code class="docutils literal"><span class="pre">type_as</span></code> to make sure
+<code class="docutils literal"><span class="pre">z_mu</span></code> and <code class="docutils literal"><span class="pre">z_sigma</span></code> are CUDA Tensors</p>
+<p>Next we sample the latent <code class="docutils literal"><span class="pre">z</span></code> from the prior, making sure to give the
+random variable a unique Pyro name <code class="docutils literal"><span class="pre">'latent'</span></code>. Then we pass <code class="docutils literal"><span class="pre">z</span></code>
+through the decoder network, which returns <code class="docutils literal"><span class="pre">mu_img</span></code> and <code class="docutils literal"><span class="pre">sigma_img</span></code>.
+We then score the observed images in the mini-batch <code class="docutils literal"><span class="pre">x</span></code> against the
+gaussian likelihood. Note that we flatten <code class="docutils literal"><span class="pre">x</span></code> so that all the pixels
+are in the rightmost dimension.</p>
+<p>That’s all there is to it! Note how closely the flow of Pyro primitives
+in <code class="docutils literal"><span class="pre">model</span></code> follows the generative story of our model, e.g.&nbsp;as
+encapsulated by Figure 1. Now we move on to the guide:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># register PyTorch module `encoder` with Pyro</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="s2">&quot;encoder&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">)</span>
+    <span class="c1"># use the encoder to get the parameters used to define q(z|x)</span>
+    <span class="n">z_mu</span><span class="p">,</span> <span class="n">z_sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># sample the latent code z</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;latent&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span> <span class="n">z_mu</span><span class="p">,</span> <span class="n">z_sigma</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Just like in the model, we first register the PyTorch module we’re using
+(namely <code class="docutils literal"><span class="pre">encoder</span></code>) with Pyro. Then we take the mini-batch of images
+<code class="docutils literal"><span class="pre">x</span></code> and pass it through the encoder. Then using the parameters output
+by the encoder network we use the normal distribution to sample a value
+of the latent for each image in the mini-batch. Crucially, we use the
+same name for the latent random variable as we did in the model:
+<code class="docutils literal"><span class="pre">'latent'</span></code>.</p>
+<p>Now that we’ve defined the full model and guide we can move on to
+inference. But before we do so let’s see how we package the model and
+guide in a PyTorch module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">VAE</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="c1"># by default our latent space is 20-dimensional</span>
+    <span class="c1"># and we use 200 hidden units</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VAE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># create the encoder and decoder networks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span><span class="n">z_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">Decoder</span><span class="p">(</span><span class="n">z_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_cuda</span><span class="p">:</span>
+            <span class="c1"># calling cuda() here will put all the parameters of</span>
+            <span class="c1"># the encoder and decoder networks into gpu memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_cuda</span> <span class="o">=</span> <span class="n">use_cuda</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span> <span class="o">=</span> <span class="n">z_dim</span>
+
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># ... as above...</span>
+
+    <span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># ... as above...</span>
+</pre></div>
+</div>
+<p>The point we’d like to make here is that the two <code class="docutils literal"><span class="pre">Module</span></code>s
+<code class="docutils literal"><span class="pre">encoder</span></code> and <code class="docutils literal"><span class="pre">decoder</span></code> are attributes of <code class="docutils literal"><span class="pre">VAE</span></code> (which itself
+inherits from <code class="docutils literal"><span class="pre">nn.Module</span></code>). This has the consequence they are both
+automatically registered as belonging to the <code class="docutils literal"><span class="pre">VAE</span></code> module. So, for
+example, when we call <code class="docutils literal"><span class="pre">parameters()</span></code> on an instance of <code class="docutils literal"><span class="pre">VAE</span></code>,
+PyTorch will know to return all the relevant parameters. It also means
+that if we’re running on a GPU, the call to <code class="docutils literal"><span class="pre">cuda()</span></code> will move all the
+parameters of all the (sub)modules into GPU memory.</p>
+</div>
+<div class="section" id="Inference">
+<h2>Inference<a class="headerlink" href="#Inference" title="Permalink to this headline">¶</a></h2>
+<p>We’re now ready for inference. First we instantiate an instance of the
+<code class="docutils literal"><span class="pre">VAE</span></code> module (and flag whether or not we’re on GPU)</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">vae</span> <span class="o">=</span> <span class="n">VAE</span><span class="p">(</span><span class="n">use_cuda</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">cuda</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we setup an instance of the Adam optimizer</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">({</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Then we setup our inference algorithm, which is going to learn good
+parameters for the model and guide by maximizing the ELBO:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">svi</span> <span class="o">=</span> <span class="n">SVI</span><span class="p">(</span><span class="n">vae</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">vae</span><span class="o">.</span><span class="n">guide</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;ELBO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That’s all there is to it. Now we just have to define our training loop:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="c1"># initialize loss accumulator</span>
+    <span class="n">epoch_loss</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="c1"># do a training epoch over each mini-batch x</span>
+    <span class="c1"># returned by the data loader</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">):</span>
+        <span class="c1"># if on GPU put mini-batch into CUDA memory</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cuda</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+        <span class="c1"># wrap the mini-batch in a PyTorch Variable</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># do ELBO gradient and accumulate loss</span>
+        <span class="n">epoch_loss</span> <span class="o">+=</span> <span class="n">svi</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First note that all the mini-batch logic is handled by the data loader.
+Next note that we have to wrap each mini-batch in a PyTorch Variable
+(since we’re going to be computing gradients). Finally, the meat of the
+training loop is <code class="docutils literal"><span class="pre">svi.step(x)</span></code>. There are two things we should draw
+attention to here: - any arguments to <code class="docutils literal"><span class="pre">step</span></code> are passed to the model
+and the guide. consequently <code class="docutils literal"><span class="pre">model</span></code> and <code class="docutils literal"><span class="pre">guide</span></code> need to have the
+same call signature - <code class="docutils literal"><span class="pre">step</span></code> returns a noisy estimate of the loss
+(i.e.&nbsp;minus the ELBO). this estimate is not normalized in any way, so
+e.g.&nbsp;it scales with the size of the mini-batch</p>
+<p>The logic for adding evaluation logic is analogous:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">test_frequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># initialize loss accumulator</span>
+    <span class="n">test_loss</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="c1"># compute the loss over the entire test set</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">test_loader</span><span class="p">):</span>
+        <span class="c1"># if on GPU put mini-batch into CUDA memory</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cuda</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+        <span class="c1"># wrap the mini-batch in a PyTorch Variable</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># compute ELBO estimate and accumulate loss</span>
+        <span class="n">test_loss</span> <span class="o">+=</span> <span class="n">svi</span><span class="o">.</span><span class="n">evaluate_loss</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Basically the only change we need to make is that we call
+<code class="docutils literal"><span class="pre">evaluate_loss</span></code> instead of <code class="docutils literal"><span class="pre">step</span></code>. This function will compute an
+estimate of the ELBO but won’t take any gradient steps.</p>
+<p>The final piece of code we’d like to highlight is the helper function
+<code class="docutils literal"><span class="pre">reconstruct_img</span></code> in the <code class="docutils literal"><span class="pre">VAE</span></code> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reconstruct_img</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># encode image x</span>
+    <span class="n">z_mu</span><span class="p">,</span> <span class="n">z_sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># sample in latent space</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">z_mu</span><span class="p">,</span> <span class="n">z_sigma</span><span class="p">)</span>
+    <span class="c1"># decode the image (not we don&#39;t sample in image space)</span>
+    <span class="n">mu_img</span><span class="p">,</span> <span class="n">sigma_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mu_img</span>
+</pre></div>
+</div>
+<p>This is just the image reconstruction experiment we described in the
+introduction translated into code. We take an image <span class="math">\(\bf x\)</span> and
+pass it through the encoder. Then we sample in latent space using the
+gaussian distribution provided by the encoder. Finlly we decode the
+latent code into an image: we return the mean vector <code class="docutils literal"><span class="pre">mu_img</span></code> so that
+the reconstructed image isn’t needlessly blurry. Note that since the
+<code class="docutils literal"><span class="pre">sample()</span></code> statement is stochastic, we’ll get different draws of <code class="docutils literal"><span class="pre">z</span></code>
+every time we run the <code class="docutils literal"><span class="pre">reconstruct_img</span></code> function. If we’ve learned a
+good model and guide—in particular if we’ve learned a good latent
+representation—this plurality of <code class="docutils literal"><span class="pre">z</span></code> samples will correspond to
+different styles of digit writing, and the reconstructed images should
+exhibit an interesting variety of different styles.</p>
+</div>
+<div class="section" id="Sample-results-[COMPLETE]">
+<h2>Sample results [COMPLETE]<a class="headerlink" href="#Sample-results-[COMPLETE]" title="Permalink to this headline">¶</a></h2>
+<p>See the full code on
+<a class="reference external" href="https://github.com/uber/pyro/blob/dev/examples/vae.py">Github</a>.</p>
+</div>
+<div class="section" id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
+<p>[1] <code class="docutils literal"><span class="pre">Auto-Encoding</span> <span class="pre">Variational</span> <span class="pre">Bayes</span></code>,&nbsp;&nbsp;&nbsp;&nbsp; Diederik P Kingma, Max
+Welling</p>
+<p>[2]
+<code class="docutils literal"><span class="pre">Stochastic</span> <span class="pre">Backpropagation</span> <span class="pre">and</span> <span class="pre">Approximate</span> <span class="pre">Inference</span> <span class="pre">in</span> <span class="pre">Deep</span> <span class="pre">Generative</span> <span class="pre">Models</span></code>,
+&nbsp;&nbsp;&nbsp;&nbsp; Danilo Jimenez Rezende, Shakir Mohamed, Daan Wierstra</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bayesian_regression.html" class="btn btn-neutral float-right" title="Bayesian Regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="svi_part_iii.html" class="btn btn-neutral" title="SVI Part III: ELBO Gradient Estimators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Uber AI Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
