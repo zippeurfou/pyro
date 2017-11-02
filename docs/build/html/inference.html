@@ -26,7 +26,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   
 
   
@@ -40,7 +40,7 @@
         <link rel="prev" title="Primitives" href="primitives.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -56,12 +56,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Pyro
+            <a href="index.html">
           
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="static/pyro_logo_small.png" class="logo" />
           
           </a>
 
@@ -179,21 +179,15 @@
 In the case where the model has latent random variables, this involves computing
 (approximate) posterior distributions. In the case of parameterized models, this
 usually involves some sort of optimization. Pyro supports multiple inference algorithms,
-with support for stochastic variational inference being the most extensive.
+with support for stochastic variational inference (SVI) being the most extensive.
 Look here for more inference algorithms in future versions of Pyro.</p>
 <div class="section" id="module-pyro.infer.svi">
 <span id="svi"></span><h2>SVI<a class="headerlink" href="#module-pyro.infer.svi" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.svi.SVI">
-<em class="property">class </em><code class="descname">SVI</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>optim</em>, <em>loss</em>, <em>loss_and_grads=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">SVI</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>optim</em>, <em>loss</em>, <em>loss_and_grads=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.svi.SVI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>A unified interface for stochastic variational inference in Pyro. Most
-users will interact with <cite>SVI</cite> with the argument <cite>loss=”ELBO”</cite>. See the
-tutorial <a class="reference external" href="http://pyro.ai/examples/svi_part_i.html">SVI Part I</a> for a discussion.</p>
-<dl class="method">
-<dt id="pyro.infer.svi.SVI.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>optim</em>, <em>loss</em>, <em>loss_and_grads=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -211,11 +205,12 @@ and marks which parameters in the param store are to be optimized</li>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
+<p>A unified interface for stochastic variational inference in Pyro. Most
+users will interact with <cite>SVI</cite> with the argument <cite>loss=”ELBO”</cite>. See the
+tutorial <a class="reference external" href="http://pyro.ai/examples/svi_part_i.html">SVI Part I</a> for a discussion.</p>
 <dl class="method">
 <dt id="pyro.infer.svi.SVI.evaluate_loss">
-<code class="descname">evaluate_loss</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI.evaluate_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI.evaluate_loss" title="Permalink to this definition">¶</a></dt>
+<code class="descname">evaluate_loss</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.svi.SVI.evaluate_loss" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -231,7 +226,7 @@ and marks which parameters in the param store are to be optimized</li>
 
 <dl class="method">
 <dt id="pyro.infer.svi.SVI.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI.step" title="Permalink to this definition">¶</a></dt>
+<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.svi.SVI.step" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -254,7 +249,7 @@ Any args or kwargs are passed to the model and guide</p>
 <span id="elbo"></span><h2>ELBO<a class="headerlink" href="#module-pyro.infer.elbo" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.elbo.ELBO">
-<em class="property">class </em><code class="descname">ELBO</code><span class="sig-paren">(</span><em>num_particles=1</em>, <em>trace_graph=False</em>, <em>enum_discrete=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ELBO</code><span class="sig-paren">(</span><em>num_particles=1</em>, <em>trace_graph=False</em>, <em>enum_discrete=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.elbo.ELBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -278,19 +273,19 @@ for a discussion.</li>
 evidence lower bound. Most users will not interact with <cite>ELBO</cite> directly; instead they will interact
 with <cite>SVI</cite>. <cite>ELBO</cite> dispatches to <cite>Trace_ELBO</cite> and <cite>TraceGraph_ELBO</cite>, where the internal
 implementations live.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><cite>enum_discrete</cite> is a bleeding edge feature.
+see <a class="reference external" href="http://pyro.ai/examples/svi_part_iii.html">SS-VAE</a> for a discussion.</p>
+</div>
 <p>References</p>
 <p>[1] <cite>Automated Variational Inference in Probabilistic Programming</cite>
 David Wingate, Theo Weber</p>
 <p>[2] <cite>Black Box Variational Inference</cite>,
 Rajesh Ranganath, Sean Gerrish, David M. Blei</p>
 <dl class="method">
-<dt id="pyro.infer.elbo.ELBO.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>num_particles=1</em>, <em>trace_graph=False</em>, <em>enum_discrete=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="pyro.infer.elbo.ELBO.loss">
-<code class="descname">loss</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO.loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loss</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates the ELBO with an estimator that uses <cite>num_particles</cite> many samples/particles,
 where <cite>num_particles</cite> is specified in the constructor.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -307,7 +302,7 @@ where <cite>num_particles</cite> is specified in the constructor.</p>
 
 <dl class="method">
 <dt id="pyro.infer.elbo.ELBO.loss_and_grads">
-<code class="descname">loss_and_grads</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO.loss_and_grads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss_and_grads" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loss_and_grads</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss_and_grads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the ELBO as well as the surrogate ELBO that is used to form the gradient estimator.
 Performs backward on the latter. Num_particle many samples are used to form the estimators,
 where <cite>num_particles</cite> is specified in the constructor.</p>
@@ -330,7 +325,7 @@ where <cite>num_particles</cite> is specified in the constructor.</p>
 <span id="importance"></span><h2>Importance<a class="headerlink" href="#module-pyro.infer.importance" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.importance.Importance">
-<em class="property">class </em><code class="descname">Importance</code><span class="sig-paren">(</span><em>model</em>, <em>guide=None</em>, <em>num_samples=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/importance.html#Importance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.importance.Importance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Importance</code><span class="sig-paren">(</span><em>model</em>, <em>guide=None</em>, <em>num_samples=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.importance.Importance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyro.infer.abstract_infer.TracePosterior</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -349,14 +344,8 @@ where <cite>num_particles</cite> is specified in the constructor.</p>
 using the guide as the proposal distribution.
 If no guide is provided, it defaults to proposing from the model’s prior.</p>
 <dl class="method">
-<dt id="pyro.infer.importance.Importance.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>model</em>, <em>guide=None</em>, <em>num_samples=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/importance.html#Importance.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.importance.Importance.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. default to num_samples = 10, guide = model</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="pyro.infer.importance.Importance.log_z">
-<code class="descname">log_z</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/importance.html#Importance.log_z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.importance.Importance.log_z" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log_z</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.importance.Importance.log_z" title="Permalink to this definition">¶</a></dt>
 <dd><p>Estimate the marginal likelihood of observations using importance weights.
 Takes the same inputs as self.model and self.guide and returns a 1-element tensor
 containing the estimate.</p>
@@ -369,7 +358,7 @@ containing the estimate.</p>
 <span id="search"></span><h2>Search<a class="headerlink" href="#module-pyro.infer.search" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.search.Search">
-<em class="property">class </em><code class="descname">Search</code><span class="sig-paren">(</span><em>model</em>, <em>max_tries=1000000.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/search.html#Search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.search.Search" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Search</code><span class="sig-paren">(</span><em>model</em>, <em>max_tries=1000000.0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.search.Search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyro.infer.abstract_infer.TracePosterior</span></code></p>
 <p>Trace and Poutine-based implementation of systematic search.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -385,26 +374,8 @@ containing the estimate.</p>
 </tbody>
 </table>
 <dl class="method">
-<dt id="pyro.infer.search.Search.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>model</em>, <em>max_tries=1000000.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/search.html#Search.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.search.Search.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. Default <cite>max_tries</cite> to something sensible - 1e6.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>model</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#callable" title="(in Python v2.7)"><em>callable</em></a>) – Probabilistic model defined as a function.</li>
-<li><strong>max_tries</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The maximum number of times to try completing a trace from the queue.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="pyro.infer.search.Search.log_z">
-<code class="descname">log_z</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/search.html#Search.log_z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.search.Search.log_z" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log_z</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.search.Search.log_z" title="Permalink to this definition">¶</a></dt>
 <dd><p>Harmonic mean log-evidence estimator.</p>
 </dd></dl>
 
@@ -465,16 +436,16 @@ containing the estimate.</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
   
   
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+    <script type="text/javascript" src="static/js/theme.js"></script>
   
 
   

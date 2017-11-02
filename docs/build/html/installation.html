@@ -26,7 +26,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   
 
   
@@ -40,7 +40,7 @@
         <link rel="prev" title="Pyro Documentation" href="index.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -56,12 +56,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Pyro
+            <a href="index.html">
           
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="static/pyro_logo_small.png" class="logo" />
           
           </a>
 
@@ -175,7 +175,7 @@
 <div class="section" id="install-from-source">
 <h2>Install from Source<a class="headerlink" href="#install-from-source" title="Permalink to this headline">¶</a></h2>
 <p>Pyro supports Python 2.7.* and Python 3.  To setup, install <a class="reference external" href="http://pytorch.org">Pytorch</a> then run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyroppl</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyro</span><span class="o">-</span><span class="n">ppl</span>
 </pre></div>
 </div>
 <p>or install from source:</p>
@@ -183,6 +183,12 @@
 <span class="n">cd</span> <span class="n">pyro</span>
 <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Some bleeding-edge features of Pyro (e.g. <cite>enum_discrete</cite>) require a very recent version of PyTorch.
+We recommend installing PyTorch from source using the <cite>master</cite> branch.
+See <a class="reference external" href="https://github.com/pytorch/pytorch#from-source">PyTorch install instructions</a> for details.</p>
 </div>
 </div>
 </div>
@@ -239,16 +245,16 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
   
   
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+    <script type="text/javascript" src="static/js/theme.js"></script>
   
 
   

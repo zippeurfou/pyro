@@ -1,4 +1,0 @@
-.. automodule:: pyro.params.param_store
-    :members:
-    :undoc-members:
-    :show-inheritance:

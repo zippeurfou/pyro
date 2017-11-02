@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -9,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; Pyro Tutorials  documentation</title>
+  <title>Transformed Distribution &mdash; Pyro 0.0.1 documentation</title>
   
 
   
@@ -34,9 +33,12 @@
 
   
         <link rel="index" title="Index"
-              href="#"/>
+              href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro Tutorials  documentation" href="index.html"/> 
+    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+        <link rel="up" title="Distributions" href="distributions.html"/>
+        <link rel="next" title="Parameters" href="parameters.html"/>
+        <link rel="prev" title="Primitive Distributions" href="primitive_dist.html"/> 
 
   
   <script src="static/js/modernizr.min.js"></script>
@@ -67,6 +69,10 @@
           
             
             
+              <div class="version">
+                0.0.1
+              </div>
+            
           
 
           
@@ -89,14 +95,25 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="svi_part_i.html">SVI Part I: An Introduction to Stochastic Variational Inference in Pyro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="svi_part_ii.html">SVI Part II: Conditional Independence, Subsampling, and Amortization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="svi_part_iii.html">SVI Part III: ELBO Gradient Estimators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vae.html">Variational Autoencoders</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bayesian_regression.html">Bayesian Regression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dmm.html">Modeling Polyphonic Music with a Deep Markov Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="air.html">Attend Infer Repeat</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="distributions.html">Distributions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="primitive_dist.html">Primitive Distributions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Transformed Distribution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#transformeddistribution">TransformedDistribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bijector">Bijector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inverseautoregressiveflow">InverseAutoRegressiveFlow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
 </ul>
 
             
@@ -111,7 +128,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Pyro Tutorials</a>
+          <a href="index.html">Pyro</a>
         
       </nav>
 
@@ -141,12 +158,16 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Index</li>
+          <li><a href="distributions.html">Distributions</a> &raquo;</li>
+        
+      <li>Transformed Distribution</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/transformed_dist.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -158,11 +179,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="transformed-distribution">
+<h1>Transformed Distribution<a class="headerlink" href="#transformed-distribution" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="transformeddistribution">
+<h2>TransformedDistribution<a class="headerlink" href="#transformeddistribution" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="bijector">
+<h2>Bijector<a class="headerlink" href="#bijector" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="inverseautoregressiveflow">
+<h2>InverseAutoRegressiveFlow<a class="headerlink" href="#inverseautoregressiveflow" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -173,12 +200,21 @@
           </div>
           <footer>
   
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="parameters.html" class="btn btn-neutral float-right" title="Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="primitive_dist.html" class="btn btn-neutral" title="Primitive Distributions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Uber AI Labs.
+        &copy; Copyright 2017, Uber Technologies Inc.
 
     </p>
   </div>
@@ -200,7 +236,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'',
+            VERSION:'0.0.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

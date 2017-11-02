@@ -26,7 +26,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   
 
   
@@ -40,7 +40,7 @@
         <link rel="prev" title="Getting Started" href="getting_started.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -56,12 +56,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Pyro
+            <a href="index.html">
           
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="static/pyro_logo_small.png" class="logo" />
           
           </a>
 
@@ -171,37 +171,19 @@
 <span id="primitives"></span><h1>Primitives<a class="headerlink" href="#module-pyro.__init__" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pyro.__init__.clear_param_store">
-<code class="descname">clear_param_store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#clear_param_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.clear_param_store" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clears the param store</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="pyro.__init__.device">
-<code class="descname">device</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.device" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> – Pytorch tensor or Variable</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Pytorch Tensor</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Pytorch tensor or Variable</td>
-</tr>
-</tbody>
-</table>
-<p>Returns CUDATensor is CUDA is enabled</p>
+<code class="descname">clear_param_store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.clear_param_store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the ParamStore. This is especially useful if you’re working in a REPL.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.get_param_store">
-<code class="descname">get_param_store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#get_param_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.get_param_store" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the param store</p>
+<code class="descname">get_param_store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.get_param_store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ParamStore</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.iarange">
-<code class="descname">iarange</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#iarange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.iarange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">iarange</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.iarange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Context manager for ranges indexing iid variables, optionally subsampling.</p>
 <p>WARNING: This is only correct if all computation is iid within the context.</p>
 <p>By default <cite>subsample_size=False</cite> and this simply yields a
@@ -221,8 +203,8 @@ Defaults to <cite>size</cite>.</li>
 <li><strong>subsample</strong> (Anything supporting <cite>len()</cite>.) – Optional custom subsample for user-defined subsampling
 schemes. If specified, then <cite>subsample_size</cite> will be set to
 <cite>len(subsample)</cite>.</li>
-<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Whether to use cuda tensors for <cite>subsample</cite> and
-<cite>log_pdf</cite>.</li>
+<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
+for <cite>subsample</cite> and <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
 </ul>
 </td>
 </tr>
@@ -247,11 +229,12 @@ of indices.</p>
         <span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>See <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part II</a> for an extended discussion.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.irange">
-<code class="descname">irange</code><span class="sig-paren">(</span><em>name</em>, <em>size</em>, <em>subsample_size=None</em>, <em>subsample=None</em>, <em>use_cuda=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#irange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.irange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">irange</code><span class="sig-paren">(</span><em>name</em>, <em>size</em>, <em>subsample_size=None</em>, <em>subsample=None</em>, <em>use_cuda=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.irange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non-vectorized version of <cite>iarange</cite>. See <cite>iarange</cite> for details.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -263,7 +246,8 @@ of indices.</p>
 <li><strong>subsample_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Size of minibatches used in subsampling. Defaults to <cite>size</cite>.</li>
 <li><strong>subsample</strong> (Anything supporting <cite>len()</cite>.) – Optional custom subsample for user-defined subsampling schemes.
 If specified, then <cite>subsample_size</cite> will be set to <cite>len(subsample)</cite>.</li>
-<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Whether to use cuda tensors for <cite>subsample</cite> and <cite>log_pdf</cite>.</li>
+<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
+for <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
 </ul>
 </td>
 </tr>
@@ -278,11 +262,12 @@ If specified, then <cite>subsample_size</cite> will be set to <cite>len(subsampl
 <span class="go">            observe(&#39;obs_{}&#39;.format(i), normal, data[i], mu, sigma)</span>
 </pre></div>
 </div>
+<p>See <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part II</a> for an extended discussion.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.map_data">
-<code class="descname">map_data</code><span class="sig-paren">(</span><em>name</em>, <em>data</em>, <em>fn</em>, <em>batch_size=None</em>, <em>batch_dim=0</em>, <em>use_cuda=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#map_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.map_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">map_data</code><span class="sig-paren">(</span><em>name</em>, <em>data</em>, <em>fn</em>, <em>batch_size=None</em>, <em>batch_dim=0</em>, <em>use_cuda=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.map_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data subsampling with the important property that all the data are conditionally independent.</p>
 <p>With default values of <cite>batch_size</cite> and <cite>batch_dim</cite>, <cite>map_data</cite> behaves like <cite>map</cite>.
 More precisely, <cite>map_data(‘foo’, data, fn)</cite> is equivalent to <cite>[fn(i, x) for i, x in enumerate(data)]</cite>.</p>
@@ -296,7 +281,8 @@ More precisely, <cite>map_data(‘foo’, data, fn)</cite> is equivalent to <cit
 <li><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#callable" title="(in Python v2.7)"><em>callable</em></a>) – a function taking <cite>(index, datum)</cite> pairs, where <cite>dataum = data[index]</cite></li>
 <li><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – number of samples per batch, or zero for the entire dataset</li>
 <li><strong>batch_dim</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – dimension to subsample for tensor inputs</li>
-<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Whether to use cuda tensors for <cite>subsample</cite> and <cite>log_pdf</cite>.</li>
+<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
+for <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
 </ul>
 </td>
 </tr>
@@ -309,18 +295,18 @@ More precisely, <cite>map_data(‘foo’, data, fn)</cite> is equivalent to <cit
 
 <dl class="function">
 <dt id="pyro.__init__.module">
-<code class="descname">module</code><span class="sig-paren">(</span><em>pyro_name</em>, <em>nn_obj</em>, <em>tags=’default’</em>, <em>update_module_params=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.module" title="Permalink to this definition">¶</a></dt>
+<code class="descname">module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>tags=’default’</em>, <em>update_module_params=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.module" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pyro_name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of module</li>
-<li><strong>nn_obj</strong> (<em>torch.nn.Module</em>) – the module to be registered with pyro</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of module</li>
+<li><strong>nn_module</strong> (<em>torch.nn.Module</em>) – the module to be registered with Pyro</li>
 <li><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a><em> or </em><em>iterable of strings</em>) – optional; tags to associate with any parameters inside the module</li>
-<li><strong>update_module_params</strong> – flag to determine whether to overwrite parameters
-in the pytorch module with the values found in the
-paramstore. Defaults to <cite>True</cite></li>
+<li><strong>update_module_params</strong> – determines whether Parameters
+in the PyTorch module get overridden with the values found in the
+ParamStore (if any). Defaults to <cite>False</cite></li>
 </ul>
 </td>
 </tr>
@@ -329,14 +315,14 @@ paramstore. Defaults to <cite>True</cite></li>
 </tr>
 </tbody>
 </table>
-<p>Takes a torch.nn.Module and registers its parameters with the param store.
-In conjunction with the param store save() and load() functionality, this
+<p>Takes a torch.nn.Module and registers its parameters with the ParamStore.
+In conjunction with the ParamStore save() and load() functionality, this
 allows the user to save and load modules.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.observe">
-<code class="descname">observe</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>obs</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.observe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">observe</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>obs</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.observe" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -361,7 +347,7 @@ it in the trace data structure.</p>
 
 <dl class="function">
 <dt id="pyro.__init__.param">
-<code class="descname">param</code><span class="sig-paren">(</span><em>name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#param"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">param</code><span class="sig-paren">(</span><em>name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.param" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -379,14 +365,14 @@ see <a class="reference external" href="parameters.html">Parameters</a>.</p>
 
 <dl class="function">
 <dt id="pyro.__init__.random_module">
-<code class="descname">random_module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>prior</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#random_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.random_module" title="Permalink to this definition">¶</a></dt>
+<code class="descname">random_module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>prior</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.random_module" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> – name of pyro module</li>
-<li><strong>nn_module</strong> – pytorch nn module</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of pyro module</li>
+<li><strong>nn_module</strong> (<em>torch.nn.Module</em>) – the module to be registered with pyro</li>
 <li><strong>prior</strong> – prior distribution or iterable over distributions</li>
 </ul>
 </td>
@@ -396,12 +382,12 @@ see <a class="reference external" href="parameters.html">Parameters</a>.</p>
 </tr>
 </tbody>
 </table>
-<p>Places a prior over the parameters of the nn module</p>
+<p>Places a prior over the parameters of the module <cite>nn_module</cite>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.sample">
-<code class="descname">sample</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.sample" title="Permalink to this definition">¶</a></dt>
+<code class="descname">sample</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.sample" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -411,7 +397,7 @@ see <a class="reference external" href="parameters.html">Parameters</a>.</p>
 <li><strong>fn</strong> – distribution class or function</li>
 <li><strong>obs</strong> – observed datum (optional; should only be used in context of
 inference) optionally specified in kwargs</li>
-<li><strong>infer</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – Optional dictionary of inference parameters specified
+<li><strong>baseline</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – Optional dictionary of baseline parameters specified
 in kwargs. See inference documentation for details.</li>
 </ul>
 </td>
@@ -421,7 +407,7 @@ in kwargs. See inference documentation for details.</li>
 </tr>
 </tbody>
 </table>
-<p>Samples from the distribution and registers it in the trace data structure.</p>
+<p>Samples from the distribution.</p>
 </dd></dl>
 
 </div>
@@ -478,16 +464,16 @@ in kwargs. See inference documentation for details.</li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
   
   
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+    <script type="text/javascript" src="static/js/theme.js"></script>
   
 
   

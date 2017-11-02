@@ -26,7 +26,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   
 
   
@@ -40,7 +40,7 @@
         <link rel="prev" title="Neural Network" href="nn.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -56,12 +56,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Pyro
+            <a href="index.html">
           
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="static/pyro_logo_small.png" class="logo" />
           
           </a>
 
@@ -182,13 +182,10 @@ a discussion). Any custom optimization algorithms are also to be found here.</p>
 <span id="pyrooptim"></span><h2>PyroOptim<a class="headerlink" href="#module-pyro.optim.optim" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.optim.optim.PyroOptim">
-<em class="property">class </em><code class="descname">PyroOptim</code><span class="sig-paren">(</span><em>optim_constructor</em>, <em>optim_args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">PyroOptim</code><span class="sig-paren">(</span><em>optim_constructor</em>, <em>optim_args</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>A wrapper for torch.optim.Optimizer objects that helps managing with dynamically generated parameters</p>
-<dl class="method">
-<dt id="pyro.optim.optim.PyroOptim.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>optim_constructor</em>, <em>optim_args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -201,23 +198,16 @@ such dictionaries</li>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pyro.optim.optim.PyroOptim.get_optim_args">
-<code class="descname">get_optim_args</code><span class="sig-paren">(</span><em>param</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim.get_optim_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim.get_optim_args" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="pyro.optim.optim.PyroOptim.get_state">
-<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim.get_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim.get_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.get_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get state associated with all the optimizers in the form of a dictionary with
 key-value pairs (parameter name, optim state dicts)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.optim.optim.PyroOptim.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim.load" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.load" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -231,7 +221,7 @@ key-value pairs (parameter name, optim state dicts)</p>
 
 <dl class="method">
 <dt id="pyro.optim.optim.PyroOptim.save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim.save" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.save" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -245,7 +235,7 @@ key-value pairs (parameter name, optim state dicts)</p>
 
 <dl class="method">
 <dt id="pyro.optim.optim.PyroOptim.set_state">
-<code class="descname">set_state</code><span class="sig-paren">(</span><em>state_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/optim.html#PyroOptim.set_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.optim.PyroOptim.set_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_state</code><span class="sig-paren">(</span><em>state_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.set_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the state associated with all the optimizers using the state obtained
 from a previous call to get_state()</p>
 </dd></dl>
@@ -257,7 +247,7 @@ from a previous call to get_state()</p>
 <span id="clippedadam"></span><h2>ClippedAdam<a class="headerlink" href="#module-pyro.optim.clipped_adam" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.optim.clipped_adam.ClippedAdam">
-<em class="property">class </em><code class="descname">ClippedAdam</code><span class="sig-paren">(</span><em>params</em>, <em>lr=0.001</em>, <em>betas=(0.9</em>, <em>0.999)</em>, <em>eps=1e-08</em>, <em>weight_decay=0</em>, <em>clip_norm=10.0</em>, <em>lrd=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/clipped_adam.html#ClippedAdam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ClippedAdam</code><span class="sig-paren">(</span><em>params</em>, <em>lr=0.001</em>, <em>betas=(0.9</em>, <em>0.999)</em>, <em>eps=1e-08</em>, <em>weight_decay=0</em>, <em>clip_norm=10.0</em>, <em>lrd=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">torch.optim.optimizer.Optimizer</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -284,13 +274,8 @@ to include gradient clipping and learning rate decay.</p>
 <p><cite>A Method for Stochastic Optimization</cite>, Diederik P. Kingma, Jimmy Ba
 <a class="reference external" href="https://arxiv.org/abs/1412.6980">https://arxiv.org/abs/1412.6980</a></p>
 <dl class="method">
-<dt id="pyro.optim.clipped_adam.ClippedAdam.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>params</em>, <em>lr=0.001</em>, <em>betas=(0.9</em>, <em>0.999)</em>, <em>eps=1e-08</em>, <em>weight_decay=0</em>, <em>clip_norm=10.0</em>, <em>lrd=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/clipped_adam.html#ClippedAdam.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="pyro.optim.clipped_adam.ClippedAdam.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>closure=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/optim/clipped_adam.html#ClippedAdam.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam.step" title="Permalink to this definition">¶</a></dt>
+<code class="descname">step</code><span class="sig-paren">(</span><em>closure=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>:param closure:: An optional closure that reevaluates the model and returns the loss.</p>
 <p>Performs a single optimization step.</p>
 </dd></dl>
@@ -352,16 +337,16 @@ to include gradient clipping and learning rate decay.</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
   
   
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+    <script type="text/javascript" src="static/js/theme.js"></script>
   
 
   
