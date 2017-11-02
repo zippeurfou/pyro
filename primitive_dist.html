@@ -1,0 +1,676 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Primitive Distributions &mdash; Pyro 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+        <link rel="up" title="Distributions" href="distributions.html"/>
+        <link rel="next" title="Transformed Distribution" href="transformed_dist.html"/>
+        <link rel="prev" title="Distributions" href="distributions.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pyro_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="distributions.html">Distributions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Primitive Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cauchy">Cauchy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.delta">Delta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#halfcauchy">HalfCauchy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.log_normal">LogNormal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyro.distributions.uniform">Uniform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transformed_dist.html">Transformed Distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pyro</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="distributions.html">Distributions</a> &raquo;</li>
+        
+      <li>Primitive Distributions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/primitive_dist.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pyro.distributions.distribution">
+<span id="primitive-distributions"></span><h1>Primitive Distributions<a class="headerlink" href="#module-pyro.distributions.distribution" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pyro.distributions.distribution.Distribution">
+<em class="property">class </em><code class="descname">Distribution</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Distribution abstract base class</p>
+<dl class="method">
+<dt id="pyro.distributions.distribution.Distribution.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.distribution.Distribution.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Virtual sample method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.distribution.Distribution.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-pyro.distributions.bernoulli">
+<span id="bernoulli"></span><h2>Bernoulli<a class="headerlink" href="#module-pyro.distributions.bernoulli" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.bernoulli.Bernoulli">
+<em class="property">class </em><code class="descname">Bernoulli</code><span class="sig-paren">(</span><em>ps</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Multi-variate bernoulli
+Params:</p>
+<blockquote>
+<div>ps = tensor of probabilities</div></blockquote>
+<dl class="method">
+<dt id="pyro.distributions.bernoulli.Bernoulli.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.bernoulli.Bernoulli.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.bernoulli.Bernoulli.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reparameterized Bernoulli sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.bernoulli.Bernoulli.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.beta">
+<span id="beta"></span><h2>Beta<a class="headerlink" href="#module-pyro.distributions.beta" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.beta.Beta">
+<em class="property">class </em><code class="descname">Beta</code><span class="sig-paren">(</span><em>alpha</em>, <em>beta</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>univariate beta distribution parameterized by alpha and beta</p>
+<dl class="method">
+<dt id="pyro.distributions.beta.Beta.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.beta.Beta.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>gamma log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.beta.Beta.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>un-reparameterizeable sampler.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.distributions.beta.log_gamma">
+<code class="descname">log_gamma</code><span class="sig-paren">(</span><em>xx</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.log_gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>quick and dirty log gamma copied from webppl</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.categorical">
+<span id="categorical"></span><h2>Categorical<a class="headerlink" href="#module-pyro.distributions.categorical" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.categorical.Categorical">
+<em class="property">class </em><code class="descname">Categorical</code><span class="sig-paren">(</span><em>ps</em>, <em>vs=None</em>, <em>one_hot=True</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Categorical is a specialized version of multinomial where n = 1</p>
+<dl class="method">
+<dt id="pyro.distributions.categorical.Categorical.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.categorical.Categorical.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>_x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.categorical.Categorical.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.categorical.Categorical.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cauchy">
+<h2>Cauchy<a class="headerlink" href="#cauchy" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyro.distributions.delta">
+<span id="delta"></span><h2>Delta<a class="headerlink" href="#module-pyro.distributions.delta" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.delta.Delta">
+<em class="property">class </em><code class="descname">Delta</code><span class="sig-paren">(</span><em>v</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Diagonal covariance Normal - the first distribution</p>
+<dl class="method">
+<dt id="pyro.distributions.delta.Delta.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.delta.Delta.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.delta.Delta.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.delta.Delta.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.normal">
+<span id="normal"></span><h2>Normal<a class="headerlink" href="#module-pyro.distributions.normal" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.normal.Normal">
+<em class="property">class </em><code class="descname">Normal</code><span class="sig-paren">(</span><em>mu</em>, <em>sigma</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Multi-variate normal with arbitrary covariance sigma
+parameterized by its mean mu and covariance matrix sigma</p>
+<dl class="method">
+<dt id="pyro.distributions.normal.Normal.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.normal.Normal.do_cholesky">
+<code class="descname">do_cholesky</code><span class="sig-paren">(</span><em>sigma</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.do_cholesky" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.normal.Normal.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normal log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.normal.Normal.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reparameterized Normal sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.normal.Normal.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.exponential">
+<span id="exponential"></span><h2>Exponential<a class="headerlink" href="#module-pyro.distributions.exponential" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.exponential.Exponential">
+<em class="property">class </em><code class="descname">Exponential</code><span class="sig-paren">(</span><em>lam</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>univariate exponential parameterized by lam</p>
+<dl class="method">
+<dt id="pyro.distributions.exponential.Exponential.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>exponential log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.exponential.Exponential.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>exponential log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.exponential.Exponential.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>reparameterized sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.exponential.Exponential.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.gamma">
+<span id="gamma"></span><h2>Gamma<a class="headerlink" href="#module-pyro.distributions.gamma" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.gamma.Gamma">
+<em class="property">class </em><code class="descname">Gamma</code><span class="sig-paren">(</span><em>alpha</em>, <em>beta</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>univariate gamma parameterized by alpha and beta</p>
+<dl class="method">
+<dt id="pyro.distributions.gamma.Gamma.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>gamma log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.gamma.Gamma.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>gamma log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.gamma.Gamma.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>un-reparameterized sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.gamma.Gamma.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.distributions.gamma.log_gamma">
+<code class="descname">log_gamma</code><span class="sig-paren">(</span><em>xx</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.log_gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>quick and dirty log gamma copied from webppl</p>
+</dd></dl>
+
+</div>
+<div class="section" id="halfcauchy">
+<h2>HalfCauchy<a class="headerlink" href="#halfcauchy" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyro.distributions.log_normal">
+<span id="lognormal"></span><h2>LogNormal<a class="headerlink" href="#module-pyro.distributions.log_normal" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.log_normal.LogNormal">
+<em class="property">class </em><code class="descname">LogNormal</code><span class="sig-paren">(</span><em>mu</em>, <em>sigma</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>uni-variate normal
+parameterized by its mean mu and std sigma</p>
+<dl class="method">
+<dt id="pyro.distributions.log_normal.LogNormal.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>log-normal log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.log_normal.LogNormal.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>log-normal log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.log_normal.LogNormal.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reparameterized log-normal sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.log_normal.LogNormal.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.multinomial">
+<span id="multinomial"></span><h2>Multinomial<a class="headerlink" href="#module-pyro.distributions.multinomial" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.multinomial.Multinomial">
+<em class="property">class </em><code class="descname">Multinomial</code><span class="sig-paren">(</span><em>ps</em>, <em>n</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Multinomial distributino
+ps - probabilities
+n - num trials</p>
+<dl class="method">
+<dt id="pyro.distributions.multinomial.Multinomial.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>hack replacement for batching multinomail score</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.multinomial.Multinomial.expanded_sample">
+<code class="descname">expanded_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.expanded_sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.multinomial.Multinomial.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>_x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multinomial log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.multinomial.Multinomial.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.poisson">
+<span id="poisson"></span><h2>Poisson<a class="headerlink" href="#module-pyro.distributions.poisson" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.poisson.Poisson">
+<em class="property">class </em><code class="descname">Poisson</code><span class="sig-paren">(</span><em>lam</em>, <em>batch_size=1</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Multi-variate poisson parameterized by its mean lam</p>
+<dl class="method">
+<dt id="pyro.distributions.poisson.Poisson.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.poisson.Poisson.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Poisson log-likelihood
+warning: need pytorch implementation of log gamma in order to be ADable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.poisson.Poisson.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Poisson sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.poisson.Poisson.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.distributions.poisson.log_gamma">
+<code class="descname">log_gamma</code><span class="sig-paren">(</span><em>xx</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.log_gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>quick and dirty log gamma copied from webppl</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyro.distributions.uniform">
+<span id="uniform"></span><h2>Uniform<a class="headerlink" href="#module-pyro.distributions.uniform" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.distributions.uniform.Uniform">
+<em class="property">class </em><code class="descname">Uniform</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
+<p>Diagonal covariance Normal - the first distribution</p>
+<dl class="method">
+<dt id="pyro.distributions.uniform.Uniform.batch_log_pdf">
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.uniform.Uniform.log_pdf">
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.log_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normal log-likelihood</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.uniform.Uniform.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reparametrized Uniform sampler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.distributions.uniform.Uniform.support">
+<code class="descname">support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.support" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="transformed_dist.html" class="btn btn-neutral float-right" title="Transformed Distribution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="distributions.html" class="btn btn-neutral" title="Distributions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Uber Technologies Inc.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

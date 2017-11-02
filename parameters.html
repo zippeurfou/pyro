@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pyro Documentation &mdash; Pyro 0.0.1 documentation</title>
+  <title>Parameters &mdash; Pyro 0.0.1 documentation</title>
   
 
   
@@ -35,8 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="#"/>
-        <link rel="next" title="Installation" href="installation.html"/> 
+    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Neural Network" href="nn.html"/>
+        <link rel="prev" title="Transformed Distribution" href="transformed_dist.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -55,7 +56,7 @@
           
 
           
-            <a href="#">
+            <a href="index.html">
           
 
           
@@ -93,13 +94,16 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distributions.html">Distributions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyro.params.param_store">ParamStore</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
@@ -117,7 +121,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Pyro</a>
+          <a href="index.html">Pyro</a>
         
       </nav>
 
@@ -141,24 +145,19 @@
 
 
 
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Pyro Documentation</li>
+      <li>Parameters</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            
-              <!-- User defined GitHub URL -->
-              <a href="https://github.com/uber/pyro" class="fa fa-github"> Edit on GitHub</a>
-            
+            <a href="_sources/parameters.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -171,55 +170,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pyro-documentation">
-<h1>Pyro Documentation<a class="headerlink" href="#pyro-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#install-from-source">Install from Source</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#svi">SVI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#elbo">ELBO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#module-pyro.infer.importance">Importance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#search">Search</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="distributions.html">Distributions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="primitive_dist.html">Primitive Distributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformed_dist.html">Transformed Distribution</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#module-pyro.params.param_store">ParamStore</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#autoregressivenn">AutoRegressiveNN</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="optimization.html#module-pyro.optim.optim">PyroOptim</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimization.html#clippedadam">ClippedAdam</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="poutine.html">Poutines (Pyro Coroutines)</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
+<p>Parameters in Pyro are basically thin wrappers around PyTorch Variables that carry unique names.
+As such Parameters are the primary stateful objects in Pyro. Users typically interact with parameters
+via the Pyro primitive <cite>pyro.param</cite>. Parameters play a central role in stochastic variational inference,
+where they are used to represent point estimates for the parameters in parameterized families of
+models and guides.</p>
+<div class="section" id="module-pyro.params.param_store">
+<span id="paramstore"></span><h2>ParamStore<a class="headerlink" href="#module-pyro.params.param_store" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.params.param_store.ParamStoreDict">
+<em class="property">class </em><code class="descname">ParamStoreDict</code><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="pyro.params.param_store.ParamStoreDict.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.params.param_store.ParamStoreDict.get_param">
+<code class="descname">get_param</code><span class="sig-paren">(</span><em>name</em>, <em>init_tensor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return named parameters from the global store</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.params.param_store.ParamStoreDict.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.params.param_store.ParamStoreDict.param_name">
+<code class="descname">param_name</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.param_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyro.params.param_store.ParamStoreDict.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
-</ul>
 </div>
 
 
@@ -232,8 +224,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="nn.html" class="btn btn-neutral float-right" title="Neural Network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="transformed_dist.html" class="btn btn-neutral" title="Transformed Distribution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pyro Documentation &mdash; Pyro 0.0.1 documentation</title>
+  <title>Optimization &mdash; Pyro 0.0.1 documentation</title>
   
 
   
@@ -35,8 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="#"/>
-        <link rel="next" title="Installation" href="installation.html"/> 
+    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Advanced Features" href="advanced.html"/>
+        <link rel="prev" title="Neural Network" href="nn.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -55,7 +56,7 @@
           
 
           
-            <a href="#">
+            <a href="index.html">
           
 
           
@@ -93,7 +94,7 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
@@ -101,7 +102,11 @@
 <li class="toctree-l1"><a class="reference internal" href="distributions.html">Distributions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyro.optim.optim">PyroOptim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clippedadam">ClippedAdam</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
 </ul>
 
@@ -117,7 +122,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Pyro</a>
+          <a href="index.html">Pyro</a>
         
       </nav>
 
@@ -141,24 +146,19 @@
 
 
 
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Pyro Documentation</li>
+      <li>Optimization</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            
-              <!-- User defined GitHub URL -->
-              <a href="https://github.com/uber/pyro" class="fa fa-github"> Edit on GitHub</a>
-            
+            <a href="_sources/optimization.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -171,55 +171,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pyro-documentation">
-<h1>Pyro Documentation<a class="headerlink" href="#pyro-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#install-from-source">Install from Source</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#svi">SVI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#elbo">ELBO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#module-pyro.infer.importance">Importance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#search">Search</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="distributions.html">Distributions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="primitive_dist.html">Primitive Distributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformed_dist.html">Transformed Distribution</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#module-pyro.params.param_store">ParamStore</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#autoregressivenn">AutoRegressiveNN</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="optimization.html#module-pyro.optim.optim">PyroOptim</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimization.html#clippedadam">ClippedAdam</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="poutine.html">Poutines (Pyro Coroutines)</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="optimization">
+<h1>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h1>
+<p>The module <cite>pyro.optim</cite> provides support for optimization in Pyro. In particular
+it provides <cite>PyroOptim</cite>, which is used to wrap PyTorch optimizers
+and manage optimizers for dynamically generated parameters
+(see the tutorial <a class="reference external" href="http://pyro.ai/examples/svi_part_i.html">SVI Part I</a> for
+a discussion). Any custom optimization algorithms are also to be found here.</p>
+<div class="section" id="module-pyro.optim.optim">
+<span id="pyrooptim"></span><h2>PyroOptim<a class="headerlink" href="#module-pyro.optim.optim" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.optim.optim.PyroOptim">
+<em class="property">class </em><code class="descname">PyroOptim</code><span class="sig-paren">(</span><em>optim_constructor</em>, <em>optim_args</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="pyro.optim.optim.PyroOptim.get_optim_args">
+<code class="descname">get_optim_args</code><span class="sig-paren">(</span><em>param</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.get_optim_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
+<div class="section" id="clippedadam">
+<h2>ClippedAdam<a class="headerlink" href="#clippedadam" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
-</ul>
 </div>
 
 
@@ -232,8 +207,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="advanced.html" class="btn btn-neutral float-right" title="Advanced Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="nn.html" class="btn btn-neutral" title="Neural Network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

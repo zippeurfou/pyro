@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pyro Documentation &mdash; Pyro 0.0.1 documentation</title>
+  <title>Advanced Features &mdash; Pyro 0.0.1 documentation</title>
   
 
   
@@ -35,8 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="#"/>
-        <link rel="next" title="Installation" href="installation.html"/> 
+    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Poutines (Pyro Coroutines)" href="poutine.html"/>
+        <link rel="prev" title="Optimization" href="optimization.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -55,7 +56,7 @@
           
 
           
-            <a href="#">
+            <a href="index.html">
           
 
           
@@ -93,7 +94,7 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
@@ -102,7 +103,10 @@
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html">Poutines (Pyro Coroutines)</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -117,7 +121,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Pyro</a>
+          <a href="index.html">Pyro</a>
         
       </nav>
 
@@ -141,24 +145,19 @@
 
 
 
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Pyro Documentation</li>
+      <li>Advanced Features</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            
-              <!-- User defined GitHub URL -->
-              <a href="https://github.com/uber/pyro" class="fa fa-github"> Edit on GitHub</a>
-            
+            <a href="_sources/advanced.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -171,55 +170,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pyro-documentation">
-<h1>Pyro Documentation<a class="headerlink" href="#pyro-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="advanced-features">
+<h1>Advanced Features<a class="headerlink" href="#advanced-features" title="Permalink to this headline">¶</a></h1>
+<p>Beneath the built-in inference algorithms, Pyro has a library of flexible
+primitives for creating new inference algorithms and working with probabilistic
+programs.  The core abstraction of composable inference in Pyro is the
+<cite>poutine</cite> (short for Pyro Coroutine).  Pyro’s inference algorithms are all
+built by applying <cite>poutine</cite> s to stochastic functions.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#install-from-source">Install from Source</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#svi">SVI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#elbo">ELBO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#module-pyro.infer.importance">Importance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inference.html#search">Search</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="distributions.html">Distributions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="primitive_dist.html">Primitive Distributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformed_dist.html">Transformed Distribution</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#module-pyro.params.param_store">ParamStore</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#autoregressivenn">AutoRegressiveNN</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="optimization.html">Optimization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="optimization.html#module-pyro.optim.optim">PyroOptim</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimization.html#clippedadam">ClippedAdam</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="poutine.html">Poutines (Pyro Coroutines)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="poutine.html">Poutines (Pyro Coroutines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#module-pyro.poutine.block_poutine">BlockPoutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#conditionpoutine">ConditionPoutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#escapepoutine">EscapePoutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#lambdapoutine">LambdaPoutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#liftpoutine">LiftPoutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#module-pyro.poutine.poutine">Poutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#module-pyro.poutine.replay_poutine">ReplayPoutine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#module-pyro.poutine.trace">Trace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poutine.html#module-pyro.poutine.trace_poutine">TracePoutine</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
-</ul>
 </div>
 
 
@@ -232,8 +205,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="poutine.html" class="btn btn-neutral float-right" title="Poutines (Pyro Coroutines)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="optimization.html" class="btn btn-neutral" title="Optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
