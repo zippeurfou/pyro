@@ -189,7 +189,7 @@ header {
     color: #fff;
     /*background-image: url(../img/uber_header.jpg);*/
 
-    background: linear-gradient( rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.42) ), url(../img/polygons_galore.jpg);
+    background: linear-gradient( rgba(195, 195, 195, 0.9), rgba(171, 30, 30, 0.65) ), url(../img/polygons_galore.jpg)
     /*background-color: #f58943;*/
     background-color: #FFFFFF;
     background-blend-mode: multiply;
