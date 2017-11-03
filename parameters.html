@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Parameters &mdash; Pyro 0.0.1 documentation</title>
+  <title>Parameters &mdash; Pyro 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
         <link rel="next" title="Neural Network" href="nn.html"/>
         <link rel="prev" title="Transformed Distribution" href="transformed_dist.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.0.1
+                0.1.0
               </div>
             
           
@@ -183,7 +183,7 @@ models and guides.</p>
 <span id="paramstore"></span><h2>ParamStore<a class="headerlink" href="#module-pyro.params.param_store" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.params.param_store.ParamStoreDict">
-<em class="property">class </em><code class="descname">ParamStoreDict</code><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ParamStoreDict</code><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Global store for parameters in Pyro. This is basically a key-value store.
 The typical user interacts with the ParamStore primarily through the
@@ -209,13 +209,13 @@ learning rates for different tags. for an example where this is useful see the t
 </ul>
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.clear">
-<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.clear" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the ParamStore</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.delete_tag">
-<code class="descname">delete_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.delete_tag" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.delete_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.delete_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes the tag; any parameters with that tag are unaffected but are no longer
 associated with that tag.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -230,7 +230,7 @@ associated with that tag.</p>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.get_active_params">
-<code class="descname">get_active_params</code><span class="sig-paren">(</span><em>tags=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_active_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_active_params</code><span class="sig-paren">(</span><em>tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.get_active_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_active_params" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -248,13 +248,13 @@ tag or any of several tags should be returned</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.get_all_param_names">
-<code class="descname">get_all_param_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_all_param_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_all_param_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.get_all_param_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_all_param_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all parameter names in the ParamStore</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.get_param">
-<code class="descname">get_param</code><span class="sig-paren">(</span><em>name</em>, <em>init_tensor=None</em>, <em>tags=’default’</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_param</code><span class="sig-paren">(</span><em>name</em>, <em>init_tensor=None</em>, <em>tags=’default’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.get_param"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameter from its name. If it does not yet exist in the
 ParamStore, it will be created and stored.
 The Pyro primitive <cite>pyro.param</cite> dispatches to this method.</p>
@@ -281,7 +281,7 @@ The Pyro primitive <cite>pyro.param</cite> dispatches to this method.</p>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.get_param_tags">
-<code class="descname">get_param_tags</code><span class="sig-paren">(</span><em>param_name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_param_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_param_tags</code><span class="sig-paren">(</span><em>param_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.get_param_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_param_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tags associated with the parameter</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -297,13 +297,13 @@ The Pyro primitive <cite>pyro.param</cite> dispatches to this method.</p>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.get_state">
-<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.get_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the ParamStore state.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.load" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads parameters from disk</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -317,7 +317,7 @@ The Pyro primitive <cite>pyro.param</cite> dispatches to this method.</p>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.mark_params_active">
-<code class="descname">mark_params_active</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.mark_params_active" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mark_params_active</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.mark_params_active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.mark_params_active" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -332,7 +332,7 @@ e.g. in the context of pyro.infer.SVI</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.mark_params_inactive">
-<code class="descname">mark_params_inactive</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.mark_params_inactive" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mark_params_inactive</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.mark_params_inactive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.mark_params_inactive" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -347,13 +347,13 @@ e.g. in the context of pyro.infer.SVI</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.named_parameters">
-<code class="descname">named_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.named_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="descname">named_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.named_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.named_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an iterator over tuples of the form (name, parameter) for each parameter in the ParamStore</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.param_name">
-<code class="descname">param_name</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.param_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">param_name</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.param_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.param_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameter name from parameter</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -369,7 +369,7 @@ e.g. in the context of pyro.infer.SVI</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.replace_param">
-<code class="descname">replace_param</code><span class="sig-paren">(</span><em>param_name</em>, <em>new_param</em>, <em>old_param</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.replace_param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">replace_param</code><span class="sig-paren">(</span><em>param_name</em>, <em>new_param</em>, <em>old_param</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.replace_param"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.replace_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace the param param_name with current value old_param with the new value new_param</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -388,7 +388,7 @@ e.g. in the context of pyro.infer.SVI</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.save" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save parameters to disk</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -402,13 +402,13 @@ e.g. in the context of pyro.infer.SVI</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.set_state">
-<code class="descname">set_state</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.set_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_state</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.set_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.set_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the ParamStore state using state from a previous get_state() call</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.tag_params">
-<code class="descname">tag_params</code><span class="sig-paren">(</span><em>param_names</em>, <em>tags</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.tag_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">tag_params</code><span class="sig-paren">(</span><em>param_names</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.tag_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.tag_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tags the parameter(s) specified by param_names with the tag(s) specified by tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -426,7 +426,7 @@ e.g. in the context of pyro.infer.SVI</td>
 
 <dl class="method">
 <dt id="pyro.params.param_store.ParamStoreDict.untag_params">
-<code class="descname">untag_params</code><span class="sig-paren">(</span><em>param_names</em>, <em>tags</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.untag_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">untag_params</code><span class="sig-paren">(</span><em>param_names</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/params/param_store.html#ParamStoreDict.untag_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.untag_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disassociates the parameter(s) specified by param_names with the tag(s) specified by tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -491,7 +491,7 @@ e.g. in the context of pyro.infer.SVI</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.0.1',
+            VERSION:'0.1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Inference &mdash; Pyro 0.0.1 documentation</title>
+  <title>Inference &mdash; Pyro 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
         <link rel="next" title="Distributions" href="distributions.html"/>
         <link rel="prev" title="Primitives" href="primitives.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.0.1
+                0.1.0
               </div>
             
           
@@ -188,7 +188,7 @@ Look here for more inference algorithms in future versions of Pyro.</p>
 <span id="svi"></span><h2>SVI<a class="headerlink" href="#module-pyro.infer.svi" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.svi.SVI">
-<em class="property">class </em><code class="descname">SVI</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>optim</em>, <em>loss</em>, <em>loss_and_grads=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.svi.SVI" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">SVI</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>optim</em>, <em>loss</em>, <em>loss_and_grads=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -213,7 +213,7 @@ users will interact with <cite>SVI</cite> with the argument <cite>loss=”ELBO�
 tutorial <a class="reference external" href="http://pyro.ai/examples/svi_part_i.html">SVI Part I</a> for a discussion.</p>
 <dl class="method">
 <dt id="pyro.infer.svi.SVI.evaluate_loss">
-<code class="descname">evaluate_loss</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.svi.SVI.evaluate_loss" title="Permalink to this definition">¶</a></dt>
+<code class="descname">evaluate_loss</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI.evaluate_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI.evaluate_loss" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -229,7 +229,7 @@ tutorial <a class="reference external" href="http://pyro.ai/examples/svi_part_i.
 
 <dl class="method">
 <dt id="pyro.infer.svi.SVI.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.svi.SVI.step" title="Permalink to this definition">¶</a></dt>
+<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/svi.html#SVI.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.svi.SVI.step" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -252,7 +252,7 @@ Any args or kwargs are passed to the model and guide</p>
 <span id="elbo"></span><h2>ELBO<a class="headerlink" href="#module-pyro.infer.elbo" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.elbo.ELBO">
-<em class="property">class </em><code class="descname">ELBO</code><span class="sig-paren">(</span><em>num_particles=1</em>, <em>trace_graph=False</em>, <em>enum_discrete=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.elbo.ELBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ELBO</code><span class="sig-paren">(</span><em>num_particles=1</em>, <em>trace_graph=False</em>, <em>enum_discrete=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -288,7 +288,7 @@ David Wingate, Theo Weber</p>
 Rajesh Ranganath, Sean Gerrish, David M. Blei</p>
 <dl class="method">
 <dt id="pyro.infer.elbo.ELBO.loss">
-<code class="descname">loss</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loss</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO.loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates the ELBO with an estimator that uses <cite>num_particles</cite> many samples/particles,
 where <cite>num_particles</cite> is specified in the constructor.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -305,7 +305,7 @@ where <cite>num_particles</cite> is specified in the constructor.</p>
 
 <dl class="method">
 <dt id="pyro.infer.elbo.ELBO.loss_and_grads">
-<code class="descname">loss_and_grads</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss_and_grads" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loss_and_grads</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/elbo.html#ELBO.loss_and_grads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.elbo.ELBO.loss_and_grads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the ELBO as well as the surrogate ELBO that is used to form the gradient estimator.
 Performs backward on the latter. Num_particle many samples are used to form the estimators,
 where <cite>num_particles</cite> is specified in the constructor.</p>
@@ -328,7 +328,7 @@ where <cite>num_particles</cite> is specified in the constructor.</p>
 <span id="importance"></span><h2>Importance<a class="headerlink" href="#module-pyro.infer.importance" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.importance.Importance">
-<em class="property">class </em><code class="descname">Importance</code><span class="sig-paren">(</span><em>model</em>, <em>guide=None</em>, <em>num_samples=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.importance.Importance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Importance</code><span class="sig-paren">(</span><em>model</em>, <em>guide=None</em>, <em>num_samples=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/importance.html#Importance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.importance.Importance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyro.infer.abstract_infer.TracePosterior</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -353,7 +353,7 @@ If no guide is provided, it defaults to proposing from the model’s prior.</p>
 <span id="search"></span><h2>Search<a class="headerlink" href="#module-pyro.infer.search" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.infer.search.Search">
-<em class="property">class </em><code class="descname">Search</code><span class="sig-paren">(</span><em>model</em>, <em>max_tries=1000000.0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.search.Search" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Search</code><span class="sig-paren">(</span><em>model</em>, <em>max_tries=1000000.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/infer/search.html#Search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.infer.search.Search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyro.infer.abstract_infer.TracePosterior</span></code></p>
 <p>Trace and Poutine-based implementation of systematic search.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -417,7 +417,7 @@ If no guide is provided, it defaults to proposing from the model’s prior.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.0.1',
+            VERSION:'0.1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

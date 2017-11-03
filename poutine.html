@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Poutines (Pyro Coroutines) &mdash; Pyro 0.0.1 documentation</title>
+  <title>Poutines (Pyro Coroutines) &mdash; Pyro 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
         <link rel="up" title="Advanced Features" href="advanced.html"/>
         <link rel="prev" title="Advanced Features" href="advanced.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.0.1
+                0.1.0
               </div>
             
           
@@ -191,7 +191,7 @@
 <span id="blockpoutine"></span><h2>BlockPoutine<a class="headerlink" href="#module-pyro.poutine.block_poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.block_poutine.BlockPoutine">
-<em class="property">class </em><code class="descname">BlockPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>hide_all=True</em>, <em>expose_all=False</em>, <em>hide=None</em>, <em>expose=None</em>, <em>hide_types=None</em>, <em>expose_types=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.block_poutine.BlockPoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">BlockPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>hide_all=True</em>, <em>expose_all=False</em>, <em>hide=None</em>, <em>expose=None</em>, <em>hide_types=None</em>, <em>expose_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/block_poutine.html#BlockPoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.block_poutine.BlockPoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <p>This Poutine selectively hides pyro primitive sites from the outside world.</p>
 <p>For example, suppose the stochastic function fn has two sample sites “a” and “b”.
@@ -222,7 +222,7 @@ See the constructor for details.</p>
 <span id="conditionpoutine"></span><h2>ConditionPoutine<a class="headerlink" href="#module-pyro.poutine.condition_poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.condition_poutine.ConditionPoutine">
-<em class="property">class </em><code class="descname">ConditionPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.condition_poutine.ConditionPoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ConditionPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/condition_poutine.html#ConditionPoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.condition_poutine.ConditionPoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <p>Adds values at observe sites to condition on data and override sampling</p>
 </dd></dl>
@@ -232,7 +232,7 @@ See the constructor for details.</p>
 <span id="escapepoutine"></span><h2>EscapePoutine<a class="headerlink" href="#module-pyro.poutine.escape_poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.escape_poutine.EscapePoutine">
-<em class="property">class </em><code class="descname">EscapePoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>escape_fn</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.escape_poutine.EscapePoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">EscapePoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>escape_fn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/escape_poutine.html#EscapePoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.escape_poutine.EscapePoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <p>Poutine that does a nonlocal exit by raising a util.NonlocalExit exception</p>
 </dd></dl>
@@ -266,7 +266,7 @@ See the constructor for details.</p>
 
 <dl class="class">
 <dt id="pyro.poutine.lambda_poutine.LambdaPoutine">
-<em class="property">class </em><code class="descname">LambdaPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>name</em>, <em>scale</em>, <em>vectorized</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.lambda_poutine.LambdaPoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">LambdaPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>name</em>, <em>scale</em>, <em>vectorized</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/lambda_poutine.html#LambdaPoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.lambda_poutine.LambdaPoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <dl class="docutils">
 <dt>This poutine has two functions:</dt>
@@ -285,7 +285,7 @@ necessary information passed via map_data_stack in msg</li>
 <span id="liftpoutine"></span><h2>LiftPoutine<a class="headerlink" href="#module-pyro.poutine.lift_poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.lift_poutine.LiftPoutine">
-<em class="property">class </em><code class="descname">LiftPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>prior</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.lift_poutine.LiftPoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">LiftPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>prior</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/lift_poutine.html#LiftPoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.lift_poutine.LiftPoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <p>Poutine which “lifts” parameters to random samples.
 Given a stochastic function with param calls and a prior,
@@ -299,7 +299,7 @@ replaced by sampling from prior.</p>
 <span id="poutine"></span><h2>Poutine<a class="headerlink" href="#module-pyro.poutine.poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.poutine.Poutine">
-<em class="property">class </em><code class="descname">Poutine</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.poutine.Poutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Poutine</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/poutine.html#Poutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.poutine.Poutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Context manager class that modifies behavior
 and adds side effects to stochastic functions
@@ -317,7 +317,7 @@ is identical to the joint distribution induced by Poutine(fn).</p>
 <span id="replaypoutine"></span><h2>ReplayPoutine<a class="headerlink" href="#module-pyro.poutine.replay_poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.replay_poutine.ReplayPoutine">
-<em class="property">class </em><code class="descname">ReplayPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>guide_trace</em>, <em>sites=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.replay_poutine.ReplayPoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ReplayPoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>guide_trace</em>, <em>sites=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/replay_poutine.html#ReplayPoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.replay_poutine.ReplayPoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <p>Poutine for replaying from an existing execution trace.</p>
 </dd></dl>
@@ -327,12 +327,12 @@ is identical to the joint distribution induced by Poutine(fn).</p>
 <span id="trace"></span><h2>Trace<a class="headerlink" href="#module-pyro.poutine.trace" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.trace.Trace">
-<em class="property">class </em><code class="descname">Trace</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace.Trace" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Trace</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace.html#Trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace.Trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">networkx.classes.digraph.DiGraph</span></code></p>
 <p>Execution trace data structure</p>
 <dl class="method">
 <dt id="pyro.poutine.trace.Trace.add_node">
-<code class="descname">add_node</code><span class="sig-paren">(</span><em>site_name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace.Trace.add_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_node</code><span class="sig-paren">(</span><em>site_name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace.html#Trace.add_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace.Trace.add_node" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -349,21 +349,21 @@ instead of silently overwriting.</p>
 
 <dl class="method">
 <dt id="pyro.poutine.trace.Trace.batch_log_pdf">
-<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>site_filter=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace.Trace.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>site_filter=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace.html#Trace.batch_log_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace.Trace.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the batched local and overall log-probabilities of the trace.</p>
 <p>The local computation is memoized, and also stores the local <cite>.log_pdf()</cite>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.poutine.trace.Trace.compute_batch_log_pdf">
-<code class="descname">compute_batch_log_pdf</code><span class="sig-paren">(</span><em>site_filter=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace.Trace.compute_batch_log_pdf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">compute_batch_log_pdf</code><span class="sig-paren">(</span><em>site_filter=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace.html#Trace.compute_batch_log_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace.Trace.compute_batch_log_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the batched local log-probabilities at each site of the trace.</p>
 <p>The local computation is memoized, and also stores the local <cite>.log_pdf()</cite>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.poutine.trace.Trace.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace.Trace.copy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace.html#Trace.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace.Trace.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Makes a shallow copy of self with nodes and edges preserved.
 Identical to super(Trace, self).copy(), but preserves the type
 and the self.graph_type attribute</p>
@@ -371,7 +371,7 @@ and the self.graph_type attribute</p>
 
 <dl class="method">
 <dt id="pyro.poutine.trace.Trace.log_pdf">
-<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>site_filter=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace.Trace.log_pdf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>site_filter=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace.html#Trace.log_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace.Trace.log_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the local and overall log-probabilities of the trace.</p>
 <p>The local computation is memoized.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -425,7 +425,7 @@ are reparameterizable primitive distributions</p>
 <span id="tracepoutine"></span><h2>TracePoutine<a class="headerlink" href="#module-pyro.poutine.trace_poutine" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.poutine.trace_poutine.TracePoutine">
-<em class="property">class </em><code class="descname">TracePoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>graph_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace_poutine.TracePoutine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">TracePoutine</code><span class="sig-paren">(</span><em>fn</em>, <em>graph_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace_poutine.html#TracePoutine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace_poutine.TracePoutine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.poutine.poutine.Poutine" title="pyro.poutine.poutine.Poutine"><code class="xref py py-class docutils literal"><span class="pre">pyro.poutine.poutine.Poutine</span></code></a></p>
 <p>Execution trace poutine.</p>
 <p>A TracePoutine records the input and output to every pyro primitive
@@ -435,7 +435,7 @@ This should, in theory, be sufficient information for every inference algorithm
 <p>We can also use this for visualization.</p>
 <dl class="method">
 <dt id="pyro.poutine.trace_poutine.TracePoutine.get_trace">
-<code class="descname">get_trace</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace_poutine.TracePoutine.get_trace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_trace</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace_poutine.html#TracePoutine.get_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace_poutine.TracePoutine.get_trace" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -454,7 +454,7 @@ Calls this poutine and returns its trace instead of the function’s return valu
 
 <dl class="function">
 <dt id="pyro.poutine.trace_poutine.get_vectorized_map_data_info">
-<code class="descname">get_vectorized_map_data_info</code><span class="sig-paren">(</span><em>trace</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace_poutine.get_vectorized_map_data_info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_vectorized_map_data_info</code><span class="sig-paren">(</span><em>trace</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace_poutine.html#get_vectorized_map_data_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace_poutine.get_vectorized_map_data_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>This determines whether the vectorized map_datas are rao-blackwellizable by
 <cite>TraceGraph_ELBO</cite>. This also gathers information to be consumed by
 downstream by <cite>TraceGraph_ELBO</cite>.</p>
@@ -462,7 +462,7 @@ downstream by <cite>TraceGraph_ELBO</cite>.</p>
 
 <dl class="function">
 <dt id="pyro.poutine.trace_poutine.identify_dense_edges">
-<code class="descname">identify_dense_edges</code><span class="sig-paren">(</span><em>trace</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.poutine.trace_poutine.identify_dense_edges" title="Permalink to this definition">¶</a></dt>
+<code class="descname">identify_dense_edges</code><span class="sig-paren">(</span><em>trace</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/poutine/trace_poutine.html#identify_dense_edges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.poutine.trace_poutine.identify_dense_edges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modifies a trace in-place by adding all edges based on the
 <cite>map_data_stack</cite> information stored at each site.</p>
 </dd></dl>
@@ -512,7 +512,7 @@ downstream by <cite>TraceGraph_ELBO</cite>.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.0.1',
+            VERSION:'0.1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

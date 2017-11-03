@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Neural Network &mdash; Pyro 0.0.1 documentation</title>
+  <title>Neural Network &mdash; Pyro 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.0.1 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
         <link rel="next" title="Optimization" href="optimization.html"/>
         <link rel="prev" title="Parameters" href="parameters.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.0.1
+                0.1.0
               </div>
             
           
@@ -181,7 +181,7 @@ of these modules is really part of the core language.</p>
 <span id="autoregressivenn"></span><h2>AutoRegressiveNN<a class="headerlink" href="#module-pyro.nn.auto_reg_nn" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyro.nn.auto_reg_nn.AutoRegressiveNN">
-<em class="property">class </em><code class="descname">AutoRegressiveNN</code><span class="sig-paren">(</span><em>input_dim</em>, <em>hidden_dim</em>, <em>output_dim_multiplier=1</em>, <em>mask_encoding=None</em>, <em>permutation=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">AutoRegressiveNN</code><span class="sig-paren">(</span><em>input_dim</em>, <em>hidden_dim</em>, <em>output_dim_multiplier=1</em>, <em>mask_encoding=None</em>, <em>permutation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/nn/auto_reg_nn.html#AutoRegressiveNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">torch.nn.modules.module.Module</span></code></p>
 <p>A simple implementation of a MADE-like auto-regressive neural network.</p>
 <p>Reference:
@@ -210,19 +210,19 @@ is such that the jacobian is upper triangular. by default this is chosen at rand
 </table>
 <dl class="method">
 <dt id="pyro.nn.auto_reg_nn.AutoRegressiveNN.forward">
-<code class="descname">forward</code><span class="sig-paren">(</span><em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN.forward" title="Permalink to this definition">¶</a></dt>
+<code class="descname">forward</code><span class="sig-paren">(</span><em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/nn/auto_reg_nn.html#AutoRegressiveNN.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>the forward method</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.nn.auto_reg_nn.AutoRegressiveNN.get_mask_encoding">
-<code class="descname">get_mask_encoding</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN.get_mask_encoding" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_mask_encoding</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/nn/auto_reg_nn.html#AutoRegressiveNN.get_mask_encoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN.get_mask_encoding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the mask encoding associated with the neural network: basically the quantity m(k) in the MADE paper.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.nn.auto_reg_nn.AutoRegressiveNN.get_permutation">
-<code class="descname">get_permutation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN.get_permutation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_permutation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/nn/auto_reg_nn.html#AutoRegressiveNN.get_permutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.nn.auto_reg_nn.AutoRegressiveNN.get_permutation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the permutation applied to the inputs (by default this is chosen at random)</p>
 </dd></dl>
 
@@ -230,7 +230,7 @@ is such that the jacobian is upper triangular. by default this is chosen at rand
 
 <dl class="class">
 <dt id="pyro.nn.auto_reg_nn.MaskedLinear">
-<em class="property">class </em><code class="descname">MaskedLinear</code><span class="sig-paren">(</span><em>in_features</em>, <em>out_features</em>, <em>mask</em>, <em>bias=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.nn.auto_reg_nn.MaskedLinear" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">MaskedLinear</code><span class="sig-paren">(</span><em>in_features</em>, <em>out_features</em>, <em>mask</em>, <em>bias=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/nn/auto_reg_nn.html#MaskedLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.nn.auto_reg_nn.MaskedLinear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">torch.nn.modules.linear.Linear</span></code></p>
 <p>A linear mapping with a given mask on the weights (arbitrary bias)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -249,7 +249,7 @@ is such that the jacobian is upper triangular. by default this is chosen at rand
 </table>
 <dl class="method">
 <dt id="pyro.nn.auto_reg_nn.MaskedLinear.forward">
-<code class="descname">forward</code><span class="sig-paren">(</span><em>_input</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.nn.auto_reg_nn.MaskedLinear.forward" title="Permalink to this definition">¶</a></dt>
+<code class="descname">forward</code><span class="sig-paren">(</span><em>_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/nn/auto_reg_nn.html#MaskedLinear.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.nn.auto_reg_nn.MaskedLinear.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>the forward method that does the masked linear computation and returns the result</p>
 </dd></dl>
 
@@ -302,7 +302,7 @@ is such that the jacobian is upper triangular. by default this is chosen at rand
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.0.1',
+            VERSION:'0.1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
