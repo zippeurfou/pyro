@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
@@ -26,7 +28,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/pyro.css" type="text/css" />
   
 
   
@@ -62,7 +64,7 @@
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="_static/pyro_logo_wide.png" class="logo" />
           
           </a>
 
@@ -183,50 +185,9 @@
 <h1>Transformed Distribution<a class="headerlink" href="#transformed-distribution" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="transformeddistribution">
 <h2>TransformedDistribution<a class="headerlink" href="#transformeddistribution" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pyro.distributions.transformed_distribution.TransformedDistribution">
-<em class="property">class </em><code class="descname">TransformedDistribution</code><span class="sig-paren">(</span><em>base_distribution</em>, <em>bijector</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.TransformedDistribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="primitive_dist.html#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
-<p>TransformedDistribution class</p>
-<dl class="method">
-<dt id="pyro.distributions.transformed_distribution.TransformedDistribution.batch_log_pdf">
-<code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>y</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.TransformedDistribution.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.transformed_distribution.TransformedDistribution.log_pdf">
-<code class="descname">log_pdf</code><span class="sig-paren">(</span><em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.TransformedDistribution.log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.transformed_distribution.TransformedDistribution.sample">
-<code class="descname">sample</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.TransformedDistribution.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>sample from base and pass through bijector</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="bijector">
 <h2>Bijector<a class="headerlink" href="#bijector" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pyro.distributions.transformed_distribution.Bijector">
-<em class="property">class </em><code class="descname">Bijector</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.Bijector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<dl class="method">
-<dt id="pyro.distributions.transformed_distribution.Bijector.inverse">
-<code class="descname">inverse</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.Bijector.inverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Virtual inverse method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.transformed_distribution.Bijector.log_det_jacobian">
-<code class="descname">log_det_jacobian</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.transformed_distribution.Bijector.log_det_jacobian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Virtual logdet jacobian method.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="inverseautoregressiveflow">
 <h2>InverseAutoRegressiveFlow<a class="headerlink" href="#inverseautoregressiveflow" title="Permalink to this headline">¶</a></h2>

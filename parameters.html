@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
@@ -26,7 +28,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/pyro.css" type="text/css" />
   
 
   
@@ -61,7 +63,7 @@
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="_static/pyro_logo_wide.png" class="logo" />
           
           </a>
 
@@ -101,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distributions.html">Distributions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyro.params.param_store">ParamStore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paramstore">ParamStore</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
@@ -177,40 +179,8 @@ As such Parameters are the primary stateful objects in Pyro. Users typically int
 via the Pyro primitive <cite>pyro.param</cite>. Parameters play a central role in stochastic variational inference,
 where they are used to represent point estimates for the parameters in parameterized families of
 models and guides.</p>
-<div class="section" id="module-pyro.params.param_store">
-<span id="paramstore"></span><h2>ParamStore<a class="headerlink" href="#module-pyro.params.param_store" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pyro.params.param_store.ParamStoreDict">
-<em class="property">class </em><code class="descname">ParamStoreDict</code><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
-<dt id="pyro.params.param_store.ParamStoreDict.clear">
-<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.params.param_store.ParamStoreDict.get_param">
-<code class="descname">get_param</code><span class="sig-paren">(</span><em>name</em>, <em>init_tensor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.get_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return named parameters from the global store</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pyro.params.param_store.ParamStoreDict.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.load" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.params.param_store.ParamStoreDict.param_name">
-<code class="descname">param_name</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.param_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.params.param_store.ParamStoreDict.save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.params.param_store.ParamStoreDict.save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="paramstore">
+<h2>ParamStore<a class="headerlink" href="#paramstore" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
@@ -26,7 +28,7 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/pyro.css" type="text/css" />
   
 
   
@@ -61,7 +63,7 @@
 
           
             
-            <img src="_static/pyro_logo_small.png" class="logo" />
+            <img src="_static/pyro_logo_wide.png" class="logo" />
           
           </a>
 
@@ -101,7 +103,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Inference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#svi">SVI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#elbo">ELBO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyro.infer.importance">Importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importance">Importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#search">Search</a></li>
 </ul>
 </li>
@@ -176,33 +178,20 @@
   <div class="section" id="inference">
 <h1>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">¶</a></h1>
 <p>In the context of probabilistic modeling, learning is usually called inference.
-In the case where the model has latent random variables, this involves computing
+In the particular case of Bayesian inference, this often involves computing
 (approximate) posterior distributions. In the case of parameterized models, this
 usually involves some sort of optimization. Pyro supports multiple inference algorithms,
 with support for stochastic variational inference (SVI) being the most extensive.
 Look here for more inference algorithms in future versions of Pyro.</p>
+<p>See <a class="reference external" href="http://pyro.ai/examples/intro_part_ii.html">Intro II</a> for a discussion of inference in Pyro.</p>
 <div class="section" id="svi">
 <h2>SVI<a class="headerlink" href="#svi" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="elbo">
 <h2>ELBO<a class="headerlink" href="#elbo" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-pyro.infer.importance">
-<span id="importance"></span><h2>Importance<a class="headerlink" href="#module-pyro.infer.importance" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pyro.infer.importance.Importance">
-<em class="property">class </em><code class="descname">Importance</code><span class="sig-paren">(</span><em>model</em>, <em>guide</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.importance.Importance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyro.infer.abstract_infer.AbstractInfer</span></code></p>
-<p>A new implementation of importance sampling</p>
-<dl class="method">
-<dt id="pyro.infer.importance.Importance.runner">
-<code class="descname">runner</code><span class="sig-paren">(</span><em>num_samples</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.infer.importance.Importance.runner" title="Permalink to this definition">¶</a></dt>
-<dd><p>main control loop
-TODO proper docs</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="importance">
+<h2>Importance<a class="headerlink" href="#importance" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="search">
 <h2>Search<a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h2>

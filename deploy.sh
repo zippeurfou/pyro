@@ -10,4 +10,4 @@ make html
 echo "Moving files..."
 mv html/* .
 echo "Removing old html directory"
-rmdir -rf html
+rm -rf html
