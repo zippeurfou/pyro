@@ -169,8 +169,228 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="primitives">
-<h1>Primitives<a class="headerlink" href="#primitives" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyro.__init__">
+<span id="primitives"></span><h1>Primitives<a class="headerlink" href="#module-pyro.__init__" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pyro.__init__.clear_param_store">
+<code class="descname">clear_param_store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.clear_param_store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the ParamStore. This is especially useful if you’re working in a REPL.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.get_param_store">
+<code class="descname">get_param_store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.get_param_store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ParamStore</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.iarange">
+<code class="descname">iarange</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.iarange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context manager for ranges indexing iid variables, optionally subsampling.</p>
+<p>WARNING: This is only correct if all computation is iid within the context.</p>
+<p>By default <cite>subsample_size=False</cite> and this simply yields a
+<cite>torch.arange(0, size)</cite>. If <cite>0 &lt; subsample_size &lt;= size</cite> this yields a
+single random batch of indices of size <cite>subsample_size</cite> and scales all log
+likelihood terms by <cite>size/batch_size</cite>, within this context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – A name that will be used for this site in a Trace.</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Optional size of the collection being subsampled
+(like <cite>stop</cite> in builtin <cite>range</cite>).</li>
+<li><strong>subsample_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Size of minibatches used in subsampling.
+Defaults to <cite>size</cite>.</li>
+<li><strong>subsample</strong> (Anything supporting <cite>len()</cite>.) – Optional custom subsample for user-defined subsampling
+schemes. If specified, then <cite>subsample_size</cite> will be set to
+<cite>len(subsample)</cite>.</li>
+<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
+for <cite>subsample</cite> and <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A context manager yielding a single 1-dimensional <cite>torch.Tensor</cite>
+of indices.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># This version simply declares independence:</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+        <span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+
+<span class="c1"># This version subsamples data in vectorized way:</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="n">ind</span><span class="p">:</span>
+        <span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+
+<span class="c1"># This wraps a user-defined subsampling method for use in pyro:</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ind</span> <span class="o">=</span> <span class="n">my_custom_subsample</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="n">ind</span><span class="p">):</span>
+        <span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part II</a> for an extended discussion.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.irange">
+<code class="descname">irange</code><span class="sig-paren">(</span><em>name</em>, <em>size</em>, <em>subsample_size=None</em>, <em>subsample=None</em>, <em>use_cuda=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.irange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-vectorized version of <cite>iarange</cite>. See <cite>iarange</cite> for details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – A name that will be used for this site in a Trace.</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The size of the collection being subsampled (like <cite>stop</cite> in builtin <cite>range</cite>).</li>
+<li><strong>subsample_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Size of minibatches used in subsampling. Defaults to <cite>size</cite>.</li>
+<li><strong>subsample</strong> (Anything supporting <cite>len()</cite>.) – Optional custom subsample for user-defined subsampling schemes.
+If specified, then <cite>subsample_size</cite> will be set to <cite>len(subsample)</cite>.</li>
+<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
+for <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A context manager yielding a single 1-dimensional <cite>torch.Tensor</cite> of indices.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">irange</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="go">        if z[i]:  # Prevents vectorization.</span>
+<span class="go">            observe(&#39;obs_{}&#39;.format(i), normal, data[i], mu, sigma)</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part II</a> for an extended discussion.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.map_data">
+<code class="descname">map_data</code><span class="sig-paren">(</span><em>name</em>, <em>data</em>, <em>fn</em>, <em>batch_size=None</em>, <em>batch_dim=0</em>, <em>use_cuda=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.map_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.module">
+<code class="descname">module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>tags=’default’</em>, <em>update_module_params=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.module" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of module</li>
+<li><strong>nn_module</strong> (<em>torch.nn.Module</em>) – the module to be registered with Pyro</li>
+<li><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a><em> or </em><em>iterable of strings</em>) – optional; tags to associate with any parameters inside the module</li>
+<li><strong>update_module_params</strong> – determines whether Parameters
+in the PyTorch module get overridden with the values found in the
+ParamStore (if any). Defaults to <cite>False</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">torch.nn.Module</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Takes a torch.nn.Module and registers its parameters with the ParamStore.
+In conjunction with the ParamStore save() and load() functionality, this
+allows the user to save and load modules.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.observe">
+<code class="descname">observe</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>obs</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.observe" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – name of observation</li>
+<li><strong>fn</strong> – distribution class or function</li>
+<li><strong>obs</strong> – observed datum</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">sample</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Alias of <cite>pyro.sample(name, fn, *args, obs=obs, **kwargs)</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.param">
+<code class="descname">param</code><span class="sig-paren">(</span><em>name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.param" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> – name of parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">parameter</td>
+</tr>
+</tbody>
+</table>
+<p>Saves the variable as a parameter in the param store.
+To interact with the param store or write to disk,
+see <a class="reference external" href="parameters.html">Parameters</a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.random_module">
+<code class="descname">random_module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>prior</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.random_module" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of pyro module</li>
+<li><strong>nn_module</strong> (<em>torch.nn.Module</em>) – the module to be registered with pyro</li>
+<li><strong>prior</strong> – prior distribution or iterable over distributions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a callable which returns a sampled module</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Places a prior over the parameters of the module <cite>nn_module</cite>.</p>
+<p>See the <a class="reference external" href="http://pyro.ai/examples/bayesian_regression.html">Bayesian Regression</a>
+tutorial for an example.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyro.__init__.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.sample" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – name of sample</li>
+<li><strong>fn</strong> – distribution class or function</li>
+<li><strong>obs</strong> – observed datum (optional; should only be used in context of
+inference) optionally specified in kwargs</li>
+<li><strong>baseline</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – Optional dictionary of baseline parameters specified
+in kwargs. See inference documentation for details.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">sample</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Calls the stochastic function <cite>fn</cite> with additional side-effects depending on <cite>name</cite> and the
+enclosing context (e.g. an inference algorithm).
+See <a class="reference external" href="http://pyro.ai/examples/intro_part_i.html">Intro I</a> and
+<a class="reference external" href="http://pyro.ai/examples/intro_part_ii.html">Intro II</a> for a discussion.</p>
+</dd></dl>
+
 </div>
 
 

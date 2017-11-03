@@ -105,8 +105,8 @@
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nn.html">Neural Network</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Optimization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pyrooptim">PyroOptim</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clippedadam">ClippedAdam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyro.optim.optim">PyroOptim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyro.optim.clipped_adam">ClippedAdam</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
@@ -180,11 +180,110 @@ it provides <cite>PyroOptim</cite>, which is used to wrap PyTorch optimizers
 and manage optimizers for dynamically generated parameters
 (see the tutorial <a class="reference external" href="http://pyro.ai/examples/svi_part_i.html">SVI Part I</a> for
 a discussion). Any custom optimization algorithms are also to be found here.</p>
-<div class="section" id="pyrooptim">
-<h2>PyroOptim<a class="headerlink" href="#pyrooptim" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pyro.optim.optim">
+<span id="pyrooptim"></span><h2>PyroOptim<a class="headerlink" href="#module-pyro.optim.optim" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.optim.optim.PyroOptim">
+<em class="property">class </em><code class="descname">PyroOptim</code><span class="sig-paren">(</span><em>optim_constructor</em>, <em>optim_args</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A wrapper for torch.optim.Optimizer objects that helps managing with dynamically generated parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>optim_constructor</strong> – a torch.optim.Optimizer</li>
+<li><strong>optim_args</strong> – a dictionary of learning arguments for the optimizer or a callable that returns
+such dictionaries</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyro.optim.optim.PyroOptim.get_state">
+<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get state associated with all the optimizers in the form of a dictionary with
+key-value pairs (parameter name, optim state dicts)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.optim.optim.PyroOptim.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.load" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – file name to load from</td>
+</tr>
+</tbody>
+</table>
+<p>Load optimizer state from disk</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.optim.optim.PyroOptim.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.save" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – file name to save to</td>
+</tr>
+</tbody>
+</table>
+<p>Save optimizer state to disk</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyro.optim.optim.PyroOptim.set_state">
+<code class="descname">set_state</code><span class="sig-paren">(</span><em>state_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.optim.PyroOptim.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the state associated with all the optimizers using the state obtained
+from a previous call to get_state()</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clippedadam">
-<h2>ClippedAdam<a class="headerlink" href="#clippedadam" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pyro.optim.clipped_adam">
+<span id="clippedadam"></span><h2>ClippedAdam<a class="headerlink" href="#module-pyro.optim.clipped_adam" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyro.optim.clipped_adam.ClippedAdam">
+<em class="property">class </em><code class="descname">ClippedAdam</code><span class="sig-paren">(</span><em>params</em>, <em>lr=0.001</em>, <em>betas=(0.9</em>, <em>0.999)</em>, <em>eps=1e-08</em>, <em>weight_decay=0</em>, <em>clip_norm=10.0</em>, <em>lrd=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">torch.optim.optimizer.Optimizer</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> – iterable of parameters to optimize or dicts defining parameter groups</li>
+<li><strong>lr</strong> – learning rate (default: 1e-3)</li>
+<li><strong>betas</strong> (<em>Tuple</em>) – coefficients used for computing
+running averages of gradient and its square (default: (0.9, 0.999))</li>
+<li><strong>eps</strong> – term added to the denominator to improve
+numerical stability (default: 1e-8)</li>
+<li><strong>weight_decay</strong> – weight decay (L2 penalty) (default: 0)</li>
+<li><strong>clip_norm</strong> – magnitude of norm to which gradients are clipped (default: 10.0)</li>
+<li><strong>lrd</strong> – rate at which learning rate decays (default: 1.0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Small modification to the Adam algorithm implemented in torch.optim.Adam
+to include gradient clipping and learning rate decay.</p>
+<p>Reference</p>
+<p><cite>A Method for Stochastic Optimization</cite>, Diederik P. Kingma, Jimmy Ba
+<a class="reference external" href="https://arxiv.org/abs/1412.6980">https://arxiv.org/abs/1412.6980</a></p>
+<dl class="method">
+<dt id="pyro.optim.clipped_adam.ClippedAdam.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>closure=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.optim.clipped_adam.ClippedAdam.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>:param closure:: An optional closure that reevaluates the model and returns the loss.</p>
+<p>Performs a single optimization step.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
