@@ -198,8 +198,8 @@
 <em class="property">class </em><code class="descname">Distribution</code><span class="sig-paren">(</span><em>reparameterized=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Base class for parameterized probability distributions.</p>
-<p>Distributions in Pyro are stochastic function objects with <cite>.sample()</cite> and <cite>.log_pdf()</cite> methods.
-Pyro provides two versions of each stochastic function:</p>
+<p>Distributions in Pyro are stochastic function objects with <code class="docutils literal"><span class="pre">.sample()</span></code> and
+<code class="docutils literal"><span class="pre">.log_pdf()</span></code> methods. Pyro provides two versions of each stochastic function:</p>
 <p><cite>(i)</cite> lowercase versions that take parameters:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>             <span class="c1"># Returns a sample of size size(param).</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">bernoulli</span><span class="o">.</span><span class="n">log_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>  <span class="c1"># Evaluates log probability of x.</span>
@@ -212,13 +212,14 @@ fixed parameters:</p>
 <span class="n">p</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">log_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>                      <span class="c1"># Evaluates log probability of x.</span>
 </pre></div>
 </div>
+<p>Under the hood the lowercase versions are aliases for the UpperCase versions.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Parameters and data should be of type <cite>torch.autograd.Variable</cite> and all
 methods return type <cite>torch.autograd.Variable</cite> unless otherwise noted.</p>
 </div>
 <p><strong>Tensor Shapes</strong>:</p>
-<p>Distributions provide a method <cite>.shape()</cite> for the tensor shape of samples:</p>
+<p>Distributions provide a method <code class="docutils literal"><span class="pre">.shape()</span></code> for the tensor shape of samples:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
@@ -226,7 +227,7 @@ methods return type <cite>torch.autograd.Variable</cite> unless otherwise noted.
 <p>Pyro distinguishes two different roles for tensor shapes of samples:</p>
 <ul class="simple">
 <li>The leftmost dimension corresponds to iid <em>batching</em>, which can be
-treated specially during inference via the <cite>.batch_log_pdf()</cite> method.</li>
+treated specially during inference via the <code class="docutils literal"><span class="pre">.batch_log_pdf()</span></code> method.</li>
 <li>The rightmost dimensions correspond to <em>event shape</em>.</li>
 </ul>
 <p>These shapes are related by the equation:</p>
@@ -234,32 +235,35 @@ treated specially during inference via the <cite>.batch_log_pdf()</cite> method.
                                     <span class="n">d</span><span class="o">.</span><span class="n">event_shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Distributions provide a vectorized <cite>.batch_log_pdf()</cite> method that evaluates
+<p>There are exceptions, for instance, in the case of the Categorical distribution,
+without one hot encoding.</p>
+<p>Distributions provide a vectorized <code class="docutils literal"><span class="pre">.batch_log_pdf()</span></code> method that evaluates
 the log probability density of each event in a batch independently,
-returning a tensor of shape <cite>d.batch_shape() + (1,)</cite>:</p>
+returning a tensor of shape <code class="docutils literal"><span class="pre">d.batch_shape(x)</span> <span class="pre">+</span> <span class="pre">(1,)</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="n">log_p</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">batch_log_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">log_p</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">batch_shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
 </pre></div>
 </div>
-<p>Distributions may also support broadcasting of the <cite>.log_pdf()</cite> and
-<cite>.batch_log_pdf()</cite> methods, which may each be evaluated with a sample
+<p>Distributions may also support broadcasting of the <code class="docutils literal"><span class="pre">.log_pdf()</span></code> and
+<code class="docutils literal"><span class="pre">.batch_log_pdf()</span></code> methods, which may each be evaluated with a sample
 tensor <cite>x</cite> that is larger than (but broadcastable from) the parameters.
-In this case, <cite>d.batch_shape()</cite> will return a shape that is broadcastable to
-<cite>d.batch_log_pdf().shape</cite>. For example:</p>
+In this case, <code class="docutils literal"><span class="pre">d.batch_shape(x)</span></code> will return the shape of the broadcasted
+batch shape using the data tensor <cite>x</cite>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
 <span class="n">xx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
-<span class="n">d</span><span class="o">.</span><span class="n">batch_log_pdf</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">batch_shape</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>  <span class="c1"># Broadcast.</span>
+<span class="n">d</span><span class="o">.</span><span class="n">batch_log_pdf</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">batch_shape</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>  <span class="c1"># returns True</span>
 </pre></div>
 </div>
 <p><strong>Implementing New Distributions</strong>:</p>
-<p>Derived classes must implement the following methods: <cite>.sample()</cite>,
-<cite>.batch_log_pdf()</cite>, <cite>.batch_shape()</cite>, and <cite>.event_shape()</cite>, .
-Discrete classes may also implement the <cite>.enumerate_support()</cite> method to improve
-gradient estimates and set <cite>.enumerable = True</cite>.</p>
+<p>Derived classes must implement the following methods: <code class="docutils literal"><span class="pre">.sample()</span></code>,
+<code class="code docutils literal"><span class="pre">.batch_log_pdf()</span></code>, <code class="docutils literal"><span class="pre">.batch_shape()</span></code>, and <code class="docutils literal"><span class="pre">.event_shape()</span></code>.
+Discrete classes may also implement the <code class="docutils literal"><span class="pre">.enumerate_support()</span></code> method to improve
+gradient estimates and set <code class="docutils literal"><span class="pre">.enumerable</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
 <p><strong>Examples</strong>:</p>
-<p>Take a look at the examples[link] to see how they interact with inference algorithms.</p>
+<p>Take a look at the <a class="reference external" href="https://pyro.ai/examples">examples</a> to see how they interact
+with inference algorithms.</p>
 <dl class="method">
 <dt id="pyro.distributions.distribution.Distribution.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="Permalink to this definition">¶</a></dt>
@@ -321,16 +325,22 @@ The shape of the result should be <cite>self.batch_size()</cite>.</td>
 
 <dl class="method">
 <dt id="pyro.distributions.distribution.Distribution.batch_shape">
-<code class="descname">batch_shape</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.batch_shape" title="Permalink to this definition">¶</a></dt>
+<code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.batch_shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>The left-hand tensor shape of samples, used for batching.</p>
-<p>Samples are of shape <cite>d().shape == d.batch_shape() + d.event_shape()</cite>.</p>
+<p>Samples are of shape <code class="code docutils literal"><span class="pre">d.shape(x)</span> <span class="pre">==</span> <span class="pre">d.batch_shape(x)</span> <span class="pre">+</span> <span class="pre">d.event_shape()</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tensor shape used for batching.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> – Data that is used to determine the batch shape. This is optional. If
+not specified, the distribution parameters are used to determine the shape
+of the batch that is returned from <code class="code docutils literal"><span class="pre">sample()</span></code>.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">torch.Size</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Tensor shape used for batching.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">torch.Size</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">ValueError if the parameters are not broadcastable to the data shape</td>
 </tr>
 </tbody>
 </table>
@@ -375,9 +385,14 @@ The shape of the result should be <cite>self.batch_size()</cite>.</td>
 
 <dl class="method">
 <dt id="pyro.distributions.distribution.Distribution.event_shape">
-<code class="descname">event_shape</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd><p>The right-hand tensor shape of samples, used for individual events.</p>
-<p>Samples are of shape <cite>d().shape == d.batch_shape() + d.event_shape()</cite>.</p>
+<code class="descname">event_shape</code><span class="sig-paren">(</span><em>x=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.event_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The right-hand tensor shape of samples, used for individual events. The
+event dimension(/s) is used to designate random variables that could
+potentially depend on each other, for instance in the case of dirichlet
+or the categorical distribution, but could also simply be used for logical
+grouping, for example in the case of a normal distribution with a
+diagonal covariance matrix.</p>
+<p>Samples are of shape <cite>d.shape(x) == d.batch_shape(x) + d.event_shape()</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -418,7 +433,7 @@ The shape of the result should be <cite>self.batch_size()</cite>.</td>
 <code class="descname">sample</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.sample" title="Permalink to this definition">¶</a></dt>
 <dd><p>Samples a random value.</p>
 <p>For tensor distributions, the returned Variable should have the same <cite>.size()</cite> as the
-parameters.</p>
+parameters, unless otherwise noted.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -434,9 +449,9 @@ batched). The shape of the result should be <cite>self.size()</cite>.</td>
 
 <dl class="method">
 <dt id="pyro.distributions.distribution.Distribution.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.shape" title="Permalink to this definition">¶</a></dt>
+<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.distribution.Distribution.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tensor shape of samples from this distribution.</p>
-<p>Samples are of shape <cite>d().shape == d.batch_shape() + d.event_shape()</cite>.</p>
+<p>Samples are of shape <cite>d.shape(x) == d.batch_shape(x) + d.event_shape()</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -469,8 +484,8 @@ of the vector takes on a value in <cite>{0, 1}</cite>.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ps</strong> (<em>torch.autograd.Variable</em>) – Probabilities. Should lie in the
 interval <cite>[0,1]</cite>.</li>
-<li><strong>logits</strong> – Log odds, i.e. log (p / (1 - p)). Either <cite>ps</cite> or <cite>logits</cite>
-should be specified, but not both.</li>
+<li><strong>logits</strong> – Log odds, i.e. <span class="math">\(\log(\frac{p}{1 - p})\)</span>. Either <cite>ps</cite> or
+<cite>logits</cite> should be specified, but not both.</li>
 <li><strong>batch_size</strong> – The number of elements in the batch used to generate
 a sample. The batch dimension will be the leftmost dimension in the
 generated sample.</li>
@@ -485,22 +500,26 @@ tensor mask to mask out certain batch sites in the log pdf computation.</li>
 <dl class="method">
 <dt id="pyro.distributions.bernoulli.Bernoulli.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.bernoulli.Bernoulli.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.bernoulli.Bernoulli.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.bernoulli.Bernoulli.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.bernoulli.Bernoulli.enumerable">
@@ -533,17 +552,14 @@ sample.</td>
 <dl class="method">
 <dt id="pyro.distributions.bernoulli.Bernoulli.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.bernoulli.Bernoulli.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.bernoulli.Bernoulli.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.bernoulli.Bernoulli.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -574,38 +590,38 @@ Should be positive.</li>
 <dl class="method">
 <dt id="pyro.distributions.beta.Beta.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.beta.Beta.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.beta.Beta.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.beta.Beta.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.beta.Beta.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.beta.Beta.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Un-reparameterizeable sampler.</p>
+<dd><p>Ref: <code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample.()</span></code></p>
 </dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.beta.Beta.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.beta.Beta.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -617,22 +633,22 @@ Should be positive.</li>
 <em class="property">class </em><code class="descname">Categorical</code><span class="sig-paren">(</span><em>ps=None</em>, <em>vs=None</em>, <em>logits=None</em>, <em>one_hot=True</em>, <em>batch_size=None</em>, <em>log_pdf_mask=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
 <p>Categorical (discrete) distribution.</p>
-<p>Discrete distribution over elements of <cite>vs</cite> with <cite>P(vs[i])</cite> proportional to
-<cite>ps[i]</cite>.  If <cite>one_hot=True</cite>, <cite>.sample()</cite> returns a one-hot vector;
-otherwise <cite>.sample()</cite> returns the category index.</p>
+<p>Discrete distribution over elements of <cite>vs</cite> with <span class="math">\(P(vs[i]) \propto ps[i]\)</span>.
+If <code class="docutils literal"><span class="pre">one_hot=True</span></code>, <code class="docutils literal"><span class="pre">.sample()</span></code> returns a one-hot vector;
+otherwise <code class="docutils literal"><span class="pre">.sample()</span></code> returns the category index.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ps</strong> (<cite>torch.autograd.Variable</cite>.) – Probabilities. These should be non-negative and normalized
+<li><strong>ps</strong> (<em>torch.autograd.Variable</em>) – Probabilities. These should be non-negative and normalized
 along the rightmost axis.</li>
-<li><strong>logits</strong> (<cite>torch.autograd.Variable</cite>.) – Log probability values. When exonentiated, these should
+<li><strong>logits</strong> (<em>torch.autograd.Variable</em>) – Log probability values. When exponentiated, these should
 sum to 1 along the last axis. Either <cite>ps</cite> or <cite>logits</cite> should be
 specified but not both.</li>
-<li><strong>vs</strong> (<cite>list</cite> or <cite>numpy.array</cite> or <cite>torch.autograd.Variable</cite>) – Optional list of values in the support.</li>
-<li><strong>one_hot</strong> – Whether <cite>sample()</cite> returns a <cite>one_hot</cite> sample.  Defaults
-to <cite>False</cite> if <cite>vs</cite> is specified or <cite>True</cite> if <cite>vs</cite> is not specified.</li>
+<li><strong>vs</strong> (<em>list</em><em> or </em><em>numpy.ndarray</em><em> or </em><em>torch.autograd.Variable</em>) – Optional list of values in the support.</li>
+<li><strong>one_hot</strong> – Whether <code class="docutils literal"><span class="pre">sample()</span></code> returns a <cite>one_hot</cite> sample.  Defaults
+to <cite>False</cite> if <cite>vs</cite> is specified, or <cite>True</cite> if <cite>vs</cite> is not specified.</li>
 <li><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Optional number of elements in the batch used to
 generate a sample. The batch dimension will be the leftmost dimension
 in the generated sample.</li>
@@ -645,12 +661,12 @@ in the generated sample.</li>
 <dt id="pyro.distributions.categorical.Categorical.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates log probability densities for one or a batch of samples and parameters.
-The last dimension for <code class="docutils literal"><span class="pre">ps</span></code> encodes the event probabilities, and the remaining
+The last dimension for <cite>ps</cite> encodes the event probabilities, and the remaining
 dimensions are considered batch dimensions.</p>
-<p><code class="docutils literal"><span class="pre">ps</span></code> and <code class="docutils literal"><span class="pre">vs</span></code> are first broadcasted to the size of the data <code class="docutils literal"><span class="pre">x</span></code>. The
-data tensor is used to to create a mask over <code class="docutils literal"><span class="pre">vs</span></code> where a 1 in the mask
-indicates that the corresponding value in <code class="docutils literal"><span class="pre">vs</span></code> was selected. Since, <code class="docutils literal"><span class="pre">ps</span></code>
-and <code class="docutils literal"><span class="pre">vs</span></code> have the same size, this mask when applied over <code class="docutils literal"><span class="pre">ps</span></code> gives
+<p><cite>ps</cite> and <cite>vs</cite> are first broadcasted to the size of the data <cite>x</cite>. The
+data tensor is used to to create a mask over <cite>vs</cite> where a 1 in the mask
+indicates that the corresponding value in <cite>vs</cite> was selected. Since, <cite>ps</cite>
+and <cite>vs</cite> have the same size, this mask when applied over <cite>ps</cite> gives
 the probabilities of the selected events. The method returns the logarithm
 of these probabilities.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -668,7 +684,8 @@ of these probabilities.</p>
 <dl class="method">
 <dt id="pyro.distributions.categorical.Categorical.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.categorical.Categorical.enumerable">
@@ -688,17 +705,17 @@ variables (but this is very expensive).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ps</strong> – numpy.ndarray where the last dimension denotes the event probabilities, <em>p_k</em>,
+<li><strong>ps</strong> (<em>torch.autograd.Variable</em>) – Tensor where the last dimension denotes the event probabilities, <em>p_k</em>,
 which must sum to 1. The remaining dimensions are considered batch dimensions.</li>
-<li><strong>vs</strong> – Optional parameter, enumerating the items in the support. This could either
+<li><strong>vs</strong> (<em>list</em><em> or </em><em>numpy.ndarray</em><em> or </em><em>torch.autograd.Variable</em>) – Optional parameter, enumerating the items in the support. This could either
 have a numeric or string type. This should have the same dimension as <code class="docutils literal"><span class="pre">ps</span></code>.</li>
-<li><strong>one_hot</strong> – Denotes whether one hot encoding is enabled. This is True by default.
-When set to false, and no explicit <code class="docutils literal"><span class="pre">vs</span></code> is provided, the last dimension gives
+<li><strong>one_hot</strong> (<em>boolean</em>) – Denotes whether one hot encoding is enabled. This is True by default.
+When set to false, and no explicit <cite>vs</cite> is provided, the last dimension gives
 the one-hot encoded value from the support.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">torch variable or numpy array enumerating the support of the categorical distribution.
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Torch variable or numpy array enumerating the support of the categorical distribution.
 Each item in the return value, when enumerated along the first dimensions, yields a
 value from the distribution’s support which has the same dimension as would be returned by
 sample. If <code class="docutils literal"><span class="pre">one_hot=True</span></code>, the last dimension is used for the one-hot encoding.</p>
@@ -714,13 +731,14 @@ sample. If <code class="docutils literal"><span class="pre">one_hot=True</span><
 <dl class="method">
 <dt id="pyro.distributions.categorical.Categorical.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.categorical.Categorical.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a sample which has the same shape as <code class="docutils literal"><span class="pre">ps</span></code> (or <code class="docutils literal"><span class="pre">vs</span></code>), except
-that if <code class="docutils literal"><span class="pre">one_hot=True</span></code> (and no <code class="docutils literal"><span class="pre">vs</span></code> is specified), the last dimension
+<dd><p>Returns a sample which has the same shape as <cite>ps</cite> (or <cite>vs</cite>), except
+that if <code class="docutils literal"><span class="pre">one_hot=True</span></code> (and no <cite>vs</cite> is specified), the last dimension
 will have the same size as the number of events. The type of the sample
 is <cite>numpy.ndarray</cite> if <cite>vs</cite> is a list or a numpy array, else a tensor
 is returned.</p>
@@ -739,7 +757,8 @@ is returned.</p>
 <dl class="method">
 <dt id="pyro.distributions.categorical.Categorical.shape">
 <code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.categorical.Categorical.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.shape" title="pyro.distributions.distribution.Distribution.shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.shape()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -772,37 +791,38 @@ in turn must have the same shape as each other.</p>
 <dl class="method">
 <dt id="pyro.distributions.cauchy.Cauchy.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.cauchy.Cauchy.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.cauchy.Cauchy.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.cauchy.Cauchy.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.cauchy.Cauchy.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.cauchy.Cauchy.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.cauchy.Cauchy.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.cauchy.Cauchy.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -828,12 +848,14 @@ be used with MCMC based inference, as doing so produces incorrect results.</p>
 <dl class="method">
 <dt id="pyro.distributions.delta.Delta.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.delta.Delta.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.delta.Delta.enumerable">
@@ -862,17 +884,14 @@ which the delta distribution is concentrated.</td>
 <dl class="method">
 <dt id="pyro.distributions.delta.Delta.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.delta.Delta.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.delta.Delta.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.delta.Delta.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -906,28 +925,33 @@ Should be positive and the same shape as <cite>mu</cite>.</li>
 <dl class="method">
 <dt id="pyro.distributions.normal.Normal.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.normal.Normal.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.normal.Normal.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Diagonal Normal log-likelihood</p>
+<p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.normal.Normal.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.normal.Normal.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.normal.Normal.reparameterized">
@@ -938,12 +962,8 @@ Should be positive and the same shape as <cite>mu</cite>.</li>
 <dt id="pyro.distributions.normal.Normal.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.sample" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reparameterized Normal sampler.</p>
+<p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
 </dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.normal.Normal.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.normal.Normal.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -969,27 +989,32 @@ Should be positive.</td>
 <dl class="method">
 <dt id="pyro.distributions.exponential.Exponential.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.exponential.Exponential.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.exponential.Exponential.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.exponential.Exponential.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.exponential.Exponential.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.exponential.Exponential.reparameterized">
@@ -1000,12 +1025,8 @@ Should be positive.</td>
 <dt id="pyro.distributions.exponential.Exponential.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.sample" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reparameterized sampler.</p>
+<p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
 </dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.exponential.Exponential.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.exponential.Exponential.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1035,38 +1056,38 @@ Shouldb be the same shape as <cite>alpha</cite>.</li>
 <dl class="method">
 <dt id="pyro.distributions.gamma.Gamma.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.gamma.Gamma.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.gamma.Gamma.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.gamma.Gamma.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.gamma.Gamma.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.gamma.Gamma.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>un-reparameterized sampler.</p>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
 </dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.gamma.Gamma.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.gamma.Gamma.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1107,27 +1128,26 @@ See also the <cite>Cauchy</cite> distribution.</p>
 <dl class="method">
 <dt id="pyro.distributions.half_cauchy.HalfCauchy.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.half_cauchy.HalfCauchy.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.half_cauchy.HalfCauchy.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.half_cauchy.HalfCauchy.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.half_cauchy.HalfCauchy.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.half_cauchy.HalfCauchy.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.half_cauchy.HalfCauchy.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.half_cauchy.HalfCauchy.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.half_cauchy.HalfCauchy.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.half_cauchy.HalfCauchy.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1159,27 +1179,32 @@ Should be positive.</li>
 <dl class="method">
 <dt id="pyro.distributions.log_normal.LogNormal.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.log_normal.LogNormal.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.log_normal.LogNormal.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.log_normal.LogNormal.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.log_normal.LogNormal.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.log_normal.LogNormal.reparameterized">
@@ -1189,13 +1214,9 @@ Should be positive.</li>
 <dl class="method">
 <dt id="pyro.distributions.log_normal.LogNormal.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reparameterized log-normal sampler.</p>
+<dd><p>Reparameterized log-normal sampler.
+Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
 </dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.log_normal.LogNormal.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.log_normal.LogNormal.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1226,27 +1247,32 @@ and should normalized over the rightmost axis.</li>
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.expanded_sample">
@@ -1256,12 +1282,8 @@ and should normalized over the rightmost axis.</li>
 <dl class="method">
 <dt id="pyro.distributions.multinomial.Multinomial.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.multinomial.Multinomial.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.multinomial.Multinomial.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1287,37 +1309,38 @@ Should be positive.</td>
 <dl class="method">
 <dt id="pyro.distributions.poisson.Poisson.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.poisson.Poisson.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.poisson.Poisson.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.poisson.Poisson.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.poisson.Poisson.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.poisson.Poisson.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pyro.distributions.poisson.Poisson.shape">
-<code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.poisson.Poisson.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1328,7 +1351,7 @@ Should be positive.</td>
 <dt id="pyro.distributions.uniform.Uniform">
 <em class="property">class </em><code class="descname">Uniform</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>batch_size=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
-<p>Uniform distribution over continuous interval <cite>[a, b]</cite>.</p>
+<p>Uniform distribution over the continuous interval <cite>[a, b]</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1345,27 +1368,32 @@ Should be greater than <cite>a</cite>.</li>
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.analytic_mean">
 <code class="descname">analytic_mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.analytic_mean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_mean" title="pyro.distributions.distribution.Distribution.analytic_mean"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_mean()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.analytic_var">
 <code class="descname">analytic_var</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.analytic_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.analytic_var" title="pyro.distributions.distribution.Distribution.analytic_var"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.analytic_var()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.batch_log_pdf">
 <code class="descname">batch_log_pdf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.batch_log_pdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_log_pdf" title="pyro.distributions.distribution.Distribution.batch_log_pdf"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_log_pdf()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.batch_shape">
 <code class="descname">batch_shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.batch_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.batch_shape" title="pyro.distributions.distribution.Distribution.batch_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.batch_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.event_shape">
 <code class="descname">event_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.event_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.event_shape" title="pyro.distributions.distribution.Distribution.event_shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.event_shape()</span></code></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyro.distributions.uniform.Uniform.reparameterized">
@@ -1375,12 +1403,14 @@ Should be greater than <cite>a</cite>.</li>
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.sample" title="pyro.distributions.distribution.Distribution.sample"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.sample()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyro.distributions.uniform.Uniform.shape">
 <code class="descname">shape</code><span class="sig-paren">(</span><em>x=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.distributions.uniform.Uniform.shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ref: <a class="reference internal" href="#pyro.distributions.distribution.Distribution.shape" title="pyro.distributions.distribution.Distribution.shape"><code class="xref py py-meth docutils literal"><span class="pre">pyro.distributions.distribution.Distribution.shape()</span></code></a></p>
+</dd></dl>
 
 </dd></dl>
 

@@ -270,12 +270,38 @@ for <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
 <dl class="function">
 <dt id="pyro.__init__.map_data">
 <code class="descname">map_data</code><span class="sig-paren">(</span><em>name</em>, <em>data</em>, <em>fn</em>, <em>batch_size=None</em>, <em>batch_dim=0</em>, <em>use_cuda=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.map_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Data subsampling with the important property that all the data are conditionally independent.</p>
+<p>With default values of <cite>batch_size</cite> and <cite>batch_dim</cite>, <cite>map_data</cite> behaves like <cite>map</cite>.
+More precisely, <cite>map_data(‘foo’, data, fn)</cite> is equivalent to <cite>[fn(i, x) for i, x in enumerate(data)]</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – named argument</li>
+<li><strong>data</strong> – data to subsample</li>
+<li><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#callable" title="(in Python v2.7)"><em>callable</em></a>) – a function taking <cite>(index, datum)</cite> pairs, where <cite>dataum = data[index]</cite></li>
+<li><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – number of samples per batch, or zero for the entire dataset</li>
+<li><strong>batch_dim</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – dimension to subsample for tensor inputs</li>
+<li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
+for <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of values returned by <cite>fn</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.module">
 <code class="descname">module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>tags=’default’</em>, <em>update_module_params=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.module" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Takes a torch.nn.Module and registers its parameters with the ParamStore.
+In conjunction with the ParamStore save() and load() functionality, this
+allows the user to save and load modules.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -294,15 +320,13 @@ ParamStore (if any). Defaults to <cite>False</cite></li>
 </tr>
 </tbody>
 </table>
-<p>Takes a torch.nn.Module and registers its parameters with the ParamStore.
-In conjunction with the ParamStore save() and load() functionality, this
-allows the user to save and load modules.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.observe">
 <code class="descname">observe</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>obs</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.observe" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Alias of <cite>pyro.sample(name, fn, *args, obs=obs, **kwargs)</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -318,13 +342,15 @@ allows the user to save and load modules.</p>
 </tr>
 </tbody>
 </table>
-<p>Alias of <cite>pyro.sample(name, fn, *args, obs=obs, **kwargs)</cite>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.param">
 <code class="descname">param</code><span class="sig-paren">(</span><em>name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.param" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Saves the variable as a parameter in the param store.
+To interact with the param store or write to disk,
+see <a class="reference external" href="parameters.html">Parameters</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -334,15 +360,15 @@ allows the user to save and load modules.</p>
 </tr>
 </tbody>
 </table>
-<p>Saves the variable as a parameter in the param store.
-To interact with the param store or write to disk,
-see <a class="reference external" href="parameters.html">Parameters</a>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.random_module">
 <code class="descname">random_module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>prior</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.random_module" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Places a prior over the parameters of the module <cite>nn_module</cite>.</p>
+<p>See the <a class="reference external" href="http://pyro.ai/examples/bayesian_regression.html">Bayesian Regression</a>
+tutorial for an example.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -358,15 +384,16 @@ see <a class="reference external" href="parameters.html">Parameters</a>.</p>
 </tr>
 </tbody>
 </table>
-<p>Places a prior over the parameters of the module <cite>nn_module</cite>.</p>
-<p>See the <a class="reference external" href="http://pyro.ai/examples/bayesian_regression.html">Bayesian Regression</a>
-tutorial for an example.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyro.__init__.sample" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Calls the stochastic function <cite>fn</cite> with additional side-effects depending on <cite>name</cite> and the
+enclosing context (e.g. an inference algorithm).
+See <a class="reference external" href="http://pyro.ai/examples/intro_part_i.html">Intro I</a> and
+<a class="reference external" href="http://pyro.ai/examples/intro_part_ii.html">Intro II</a> for a discussion.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -385,10 +412,6 @@ in kwargs. See inference documentation for details.</li>
 </tr>
 </tbody>
 </table>
-<p>Calls the stochastic function <cite>fn</cite> with additional side-effects depending on <cite>name</cite> and the
-enclosing context (e.g. an inference algorithm).
-See <a class="reference external" href="http://pyro.ai/examples/intro_part_i.html">Intro I</a> and
-<a class="reference external" href="http://pyro.ai/examples/intro_part_ii.html">Intro II</a> for a discussion.</p>
 </dd></dl>
 
 </div>
