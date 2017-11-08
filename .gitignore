@@ -59,8 +59,6 @@ pip-delete-this-directory.txt
 
 .cache
 .coverage
-_modules
-_sources
 
 # Scrapy stuff:
 .scrapy
