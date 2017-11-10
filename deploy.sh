@@ -4,6 +4,9 @@ echo "changing branches to master"
 git checkout master
 echo "building docs"
 make docs
+cd docs
+make html
+cd ..
 echo "moving docs to tmpdocs"
 mv docs/build/html tmpdocs 
 echo "changing branch to gh-pages"
