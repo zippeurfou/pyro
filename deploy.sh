@@ -1,7 +1,7 @@
 # clean old static files 
 echo "changing branches to master"
 # CHANGE THIS TO MASTER
-git checkout dev 
+git checkout master
 echo "building docs"
 make docs
 echo "moving docs to tmpdocs"
