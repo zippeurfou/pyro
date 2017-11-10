@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Primitive Distributions &mdash; Pyro 0.1.0 documentation</title>
+  <title>Primitive Distributions &mdash; Pyro 0.1.2 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.2 documentation" href="index.html"/>
         <link rel="up" title="Distributions" href="distributions.html"/>
         <link rel="next" title="Transformed Distribution" href="transformed_dist.html"/>
         <link rel="prev" title="Distributions" href="distributions.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -388,7 +388,7 @@ of the batch that is returned from <code class="code docutils literal"><span cla
 <code class="descname">event_shape</code><span class="sig-paren">(</span><em>x=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/distributions/distribution.html#Distribution.event_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.distributions.distribution.Distribution.event_shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>The right-hand tensor shape of samples, used for individual events. The
 event dimension(/s) is used to designate random variables that could
-potentially depend on each other, for instance in the case of dirichlet
+potentially depend on each other, for instance in the case of Dirichlet
 or the categorical distribution, but could also simply be used for logical
 grouping, for example in the case of a normal distribution with a
 diagonal covariance matrix.</p>
@@ -1294,7 +1294,7 @@ and should normalized over the rightmost axis.</li>
 <dt id="pyro.distributions.poisson.Poisson">
 <em class="property">class </em><code class="descname">Poisson</code><span class="sig-paren">(</span><em>lam</em>, <em>batch_size=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/distributions/poisson.html#Poisson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.distributions.poisson.Poisson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyro.distributions.distribution.Distribution" title="pyro.distributions.distribution.Distribution"><code class="xref py py-class docutils literal"><span class="pre">pyro.distributions.distribution.Distribution</span></code></a></p>
-<p>Poisson distribution over integers parameterizeds by scale <cite>lambda</cite>.</p>
+<p>Poisson distribution over integers parameterized by scale <cite>lambda</cite>.</p>
 <p>This is often used in conjunction with <cite>torch.nn.Softplus</cite> to ensure the
 <cite>lam</cite> parameter is positive.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1461,7 +1461,7 @@ Should be greater than <cite>a</cite>.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0',
+            VERSION:'0.1.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

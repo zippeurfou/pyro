@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Primitives &mdash; Pyro 0.1.0 documentation</title>
+  <title>Primitives &mdash; Pyro 0.1.2 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.2 documentation" href="index.html"/>
         <link rel="next" title="Inference" href="inference.html"/>
         <link rel="prev" title="Getting Started" href="getting_started.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -186,18 +186,43 @@
 <dl class="function">
 <dt id="pyro.__init__.iarange">
 <code class="descname">iarange</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#iarange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.iarange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager for ranges indexing iid variables, optionally subsampling.</p>
-<p>WARNING: This is only correct if all computation is iid within the context.</p>
-<p>By default <cite>subsample_size=False</cite> and this simply yields a
-<cite>torch.arange(0, size)</cite>. If <cite>0 &lt; subsample_size &lt;= size</cite> this yields a
-single random batch of indices of size <cite>subsample_size</cite> and scales all log
-likelihood terms by <cite>size/batch_size</cite>, within this context.</p>
+<dd><p>Context manager for conditionally independent ranges of variables.</p>
+<p><code class="docutils literal"><span class="pre">iarange</span></code> is similar to <code class="docutils literal"><span class="pre">torch.arange</span></code> in that it yields an array
+of indices by which other tensors can be indexed. <code class="docutils literal"><span class="pre">iarange</span></code> differs from
+<code class="docutils literal"><span class="pre">torch.arange</span></code> in that it also informs inference algorithms that the
+variables being indexed are conditionally independent. To do this,
+<code class="docutils literal"><span class="pre">iarange</span></code> is a provided as context manager rather than a function, and
+users must guarantee that all computation within an <code class="docutils literal"><span class="pre">iarange</span></code> context
+is conditionally independent:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="k">as</span> <span class="n">ind</span><span class="p">:</span>
+    <span class="c1"># ...do conditionally independent stuff with ind...</span>
+</pre></div>
+</div>
+<p>Additionally, <code class="docutils literal"><span class="pre">iarange</span></code> can take advantage of the conditional
+independence assumptions by subsampling the indices and informing inference
+algorithms to scale various computed values. This is typically used to
+subsample minibatches of data:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">iarange</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="k">as</span> <span class="n">ind</span><span class="p">:</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">==</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<p>By default <code class="docutils literal"><span class="pre">subsample_size=False</span></code> and this simply yields a
+<code class="docutils literal"><span class="pre">torch.arange(0,</span> <span class="pre">size)</span></code>. If <code class="docutils literal"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">subsample_size</span> <span class="pre">&lt;=</span> <span class="pre">size</span></code> this yields a
+single random batch of indices of size <code class="docutils literal"><span class="pre">subsample_size</span></code> and scales all
+log likelihood terms by <code class="docutils literal"><span class="pre">size/batch_size</span></code>, within this context.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is only correct if all computation is conditionally
+independent within the context.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – A name that will be used for this site in a Trace.</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – A unique name to help inference algorithms match
+<code class="docutils literal"><span class="pre">iarange</span></code> sites between models and guides.</li>
 <li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Optional size of the collection being subsampled
 (like <cite>stop</cite> in builtin <cite>range</cite>).</li>
 <li><strong>subsample_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Size of minibatches used in subsampling.
@@ -231,29 +256,34 @@ of indices.</p>
         <span class="n">observe</span><span class="p">(</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>See <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part II</a> for an extended discussion.</p>
+<p>See <a class="reference external" href="http://pyro.ai/examples/svi_part_ii.html">SVI Part II</a> for an
+extended discussion.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyro.__init__.irange">
 <code class="descname">irange</code><span class="sig-paren">(</span><em>name</em>, <em>size</em>, <em>subsample_size=None</em>, <em>subsample=None</em>, <em>use_cuda=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#irange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.irange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Non-vectorized version of <cite>iarange</cite>. See <cite>iarange</cite> for details.</p>
+<dd><p>Non-vectorized version of <code class="docutils literal"><span class="pre">iarange</span></code>. See <code class="docutils literal"><span class="pre">iarange</span></code> for details.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – A name that will be used for this site in a Trace.</li>
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The size of the collection being subsampled (like <cite>stop</cite> in builtin <cite>range</cite>).</li>
-<li><strong>subsample_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Size of minibatches used in subsampling. Defaults to <cite>size</cite>.</li>
-<li><strong>subsample</strong> (Anything supporting <cite>len()</cite>.) – Optional custom subsample for user-defined subsampling schemes.
-If specified, then <cite>subsample_size</cite> will be set to <cite>len(subsample)</cite>.</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The size of the collection being subsampled (like <code class="docutils literal"><span class="pre">stop</span></code>
+in builtin <code class="docutils literal"><span class="pre">range</span></code>).</li>
+<li><strong>subsample_size</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Size of minibatches used in subsampling.
+Defaults to <code class="docutils literal"><span class="pre">size</span></code>.</li>
+<li><strong>subsample</strong> (Anything supporting <code class="docutils literal"><span class="pre">len()</span></code>.) – Optional custom subsample for user-defined subsampling
+schemes. If specified, then <code class="docutils literal"><span class="pre">subsample_size</span></code> will be set to
+<code class="docutils literal"><span class="pre">len(subsample)</span></code>.</li>
 <li><strong>use_cuda</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Optional bool specifying whether to use cuda tensors
-for <cite>log_pdf</cite>. Defaults to <cite>torch.Tensor.is_cuda</cite>.</li>
+for internal <code class="docutils literal"><span class="pre">log_pdf</span></code> computations. Defaults to
+<code class="docutils literal"><span class="pre">torch.Tensor.is_cuda</span></code>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A context manager yielding a single 1-dimensional <cite>torch.Tensor</cite> of indices.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A generator yielding a sequence of integers.</p>
 </td>
 </tr>
 </tbody>
@@ -337,9 +367,11 @@ see <a class="reference external" href="parameters.html">Parameters</a>.</p>
 <dl class="function">
 <dt id="pyro.__init__.random_module">
 <code class="descname">random_module</code><span class="sig-paren">(</span><em>name</em>, <em>nn_module</em>, <em>prior</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#random_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.random_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Places a prior over the parameters of the module <cite>nn_module</cite>.</p>
-<p>See the <a class="reference external" href="http://pyro.ai/examples/bayesian_regression.html">Bayesian Regression</a>
-tutorial for an example.</p>
+<dd><p>Places a prior over the parameters of the module <cite>nn_module</cite>.
+Returns a distribution (callable) over <cite>nn.Module`s, which
+upon calling returns a sampled `nn.Module</cite>.</p>
+<p>See the <a class="reference external" href="http://pyro.ai/examples/bayesian_regression.html">Bayesian Regression tutorial</a>
+for an example.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -347,7 +379,8 @@ tutorial for an example.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of pyro module</li>
 <li><strong>nn_module</strong> (<em>torch.nn.Module</em>) – the module to be registered with pyro</li>
-<li><strong>prior</strong> – prior distribution or iterable over distributions</li>
+<li><strong>prior</strong> – pyro distribution, stochastic function, or python dict with parameter names
+as keys and respective distributions/stochastic functions as values.</li>
 </ul>
 </td>
 </tr>
@@ -361,8 +394,8 @@ tutorial for an example.</p>
 <dl class="function">
 <dt id="pyro.__init__.sample">
 <code class="descname">sample</code><span class="sig-paren">(</span><em>name</em>, <em>fn</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyro/__init__.html#sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyro.__init__.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the stochastic function <cite>fn</cite> with additional side-effects depending on <cite>name</cite> and the
-enclosing context (e.g. an inference algorithm).
+<dd><p>Calls the stochastic function <cite>fn</cite> with additional side-effects depending
+on <cite>name</cite> and the enclosing context (e.g. an inference algorithm).
 See <a class="reference external" href="http://pyro.ai/examples/intro_part_i.html">Intro I</a> and
 <a class="reference external" href="http://pyro.ai/examples/intro_part_ii.html">Intro II</a> for a discussion.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -432,7 +465,7 @@ in kwargs. See inference documentation for details.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0',
+            VERSION:'0.1.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

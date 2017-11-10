@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyro.__init__ &mdash; Pyro 0.1.0 documentation</title>
+  <title>pyro.__init__ &mdash; Pyro 0.1.2 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="Pyro 0.1.0 documentation" href="../../index.html"/>
+    <link rel="top" title="Pyro 0.1.2 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -184,6 +184,8 @@
 <span class="kn">from</span> <span class="nn">pyro.poutine</span> <span class="k">import</span> <span class="n">_PYRO_STACK</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">do</span>  <span class="c1"># noqa: F401</span>
 <span class="kn">from</span> <span class="nn">pyro.util</span> <span class="k">import</span> <span class="n">apply_stack</span><span class="p">,</span> <span class="n">deep_getattr</span><span class="p">,</span> <span class="n">get_tensor_data</span><span class="p">,</span> <span class="n">ones</span><span class="p">,</span> <span class="n">set_rng_seed</span><span class="p">,</span> <span class="n">zeros</span>  <span class="c1"># noqa: F401</span>
 
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.2&#39;</span>
+
 
 <div class="viewcode-block" id="get_param_store"><a class="viewcode-back" href="../../primitives.html#pyro.__init__.get_param_store">[docs]</a><span class="k">def</span> <span class="nf">get_param_store</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -201,8 +203,8 @@
 
 <div class="viewcode-block" id="sample"><a class="viewcode-back" href="../../primitives.html#pyro.__init__.sample">[docs]</a><span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calls the stochastic function `fn` with additional side-effects depending on `name` and the</span>
-<span class="sd">    enclosing context (e.g. an inference algorithm).</span>
+<span class="sd">    Calls the stochastic function `fn` with additional side-effects depending</span>
+<span class="sd">    on `name` and the enclosing context (e.g. an inference algorithm).</span>
 <span class="sd">    See `Intro I &lt;http://pyro.ai/examples/intro_part_i.html&gt;`_ and</span>
 <span class="sd">    `Intro II &lt;http://pyro.ai/examples/intro_part_ii.html&gt;`_ for a discussion.</span>
 
@@ -237,7 +239,7 @@
             <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s2">&quot;baseline&quot;</span><span class="p">:</span> <span class="n">baseline</span><span class="p">,</span>
             <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-            <span class="s2">&quot;map_data_stack&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;cond_indep_stack&quot;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">&quot;done&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span>
@@ -329,16 +331,38 @@
 <div class="viewcode-block" id="iarange"><a class="viewcode-back" href="../../primitives.html#pyro.__init__.iarange">[docs]</a><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span> <span class="nf">iarange</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Context manager for ranges indexing iid variables, optionally subsampling.</span>
+<span class="sd">    Context manager for conditionally independent ranges of variables.</span>
 
-<span class="sd">    WARNING: This is only correct if all computation is iid within the context.</span>
+<span class="sd">    ``iarange`` is similar to ``torch.arange`` in that it yields an array</span>
+<span class="sd">    of indices by which other tensors can be indexed. ``iarange`` differs from</span>
+<span class="sd">    ``torch.arange`` in that it also informs inference algorithms that the</span>
+<span class="sd">    variables being indexed are conditionally independent. To do this,</span>
+<span class="sd">    ``iarange`` is a provided as context manager rather than a function, and</span>
+<span class="sd">    users must guarantee that all computation within an ``iarange`` context</span>
+<span class="sd">    is conditionally independent::</span>
 
-<span class="sd">    By default `subsample_size=False` and this simply yields a</span>
-<span class="sd">    `torch.arange(0, size)`. If `0 &lt; subsample_size &lt;= size` this yields a</span>
-<span class="sd">    single random batch of indices of size `subsample_size` and scales all log</span>
-<span class="sd">    likelihood terms by `size/batch_size`, within this context.</span>
+<span class="sd">        with iarange(&quot;name&quot;, size) as ind:</span>
+<span class="sd">            # ...do conditionally independent stuff with ind...</span>
 
-<span class="sd">    :param str name: A name that will be used for this site in a Trace.</span>
+<span class="sd">    Additionally, ``iarange`` can take advantage of the conditional</span>
+<span class="sd">    independence assumptions by subsampling the indices and informing inference</span>
+<span class="sd">    algorithms to scale various computed values. This is typically used to</span>
+<span class="sd">    subsample minibatches of data::</span>
+
+<span class="sd">        with iarange(&quot;data&quot;, len(data), subsample_size=100) as ind:</span>
+<span class="sd">            batch = data[ind]</span>
+<span class="sd">            assert len(batch) == 100</span>
+
+<span class="sd">    By default ``subsample_size=False`` and this simply yields a</span>
+<span class="sd">    ``torch.arange(0, size)``. If ``0 &lt; subsample_size &lt;= size`` this yields a</span>
+<span class="sd">    single random batch of indices of size ``subsample_size`` and scales all</span>
+<span class="sd">    log likelihood terms by ``size/batch_size``, within this context.</span>
+
+<span class="sd">    .. warning::  This is only correct if all computation is conditionally</span>
+<span class="sd">        independent within the context.</span>
+
+<span class="sd">    :param str name: A unique name to help inference algorithms match</span>
+<span class="sd">        ``iarange`` sites between models and guides.</span>
 <span class="sd">    :param int size: Optional size of the collection being subsampled</span>
 <span class="sd">        (like `stop` in builtin `range`).</span>
 <span class="sd">    :param int subsample_size: Size of minibatches used in subsampling.</span>
@@ -367,7 +391,8 @@
 <span class="sd">        &gt;&gt;&gt; with iarange(&#39;data&#39;, 100, subsample=ind):</span>
 <span class="sd">                observe(&#39;obs&#39;, normal, data.index_select(0, ind), mu, sigma)</span>
 
-<span class="sd">    See `SVI Part II &lt;http://pyro.ai/examples/svi_part_ii.html&gt;`_ for an extended discussion.</span>
+<span class="sd">    See `SVI Part II &lt;http://pyro.ai/examples/svi_part_ii.html&gt;`_ for an</span>
+<span class="sd">    extended discussion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">subsample</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">_subsample</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">subsample_size</span><span class="p">,</span> <span class="n">subsample</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_PYRO_STACK</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -380,17 +405,21 @@
 
 <div class="viewcode-block" id="irange"><a class="viewcode-back" href="../../primitives.html#pyro.__init__.irange">[docs]</a><span class="k">def</span> <span class="nf">irange</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Non-vectorized version of `iarange`. See `iarange` for details.</span>
+<span class="sd">    Non-vectorized version of ``iarange``. See ``iarange`` for details.</span>
 
 <span class="sd">    :param str name: A name that will be used for this site in a Trace.</span>
-<span class="sd">    :param int size: The size of the collection being subsampled (like `stop` in builtin `range`).</span>
-<span class="sd">    :param int subsample_size: Size of minibatches used in subsampling. Defaults to `size`.</span>
-<span class="sd">    :param subsample: Optional custom subsample for user-defined subsampling schemes.</span>
-<span class="sd">        If specified, then `subsample_size` will be set to `len(subsample)`.</span>
-<span class="sd">    :type subsample: Anything supporting `len()`.</span>
+<span class="sd">    :param int size: The size of the collection being subsampled (like ``stop``</span>
+<span class="sd">        in builtin ``range``).</span>
+<span class="sd">    :param int subsample_size: Size of minibatches used in subsampling.</span>
+<span class="sd">        Defaults to ``size``.</span>
+<span class="sd">    :param subsample: Optional custom subsample for user-defined subsampling</span>
+<span class="sd">        schemes. If specified, then ``subsample_size`` will be set to</span>
+<span class="sd">        ``len(subsample)``.</span>
+<span class="sd">    :type subsample: Anything supporting ``len()``.</span>
 <span class="sd">    :param bool use_cuda: Optional bool specifying whether to use cuda tensors</span>
-<span class="sd">        for `log_pdf`. Defaults to `torch.Tensor.is_cuda`.</span>
-<span class="sd">    :return: A context manager yielding a single 1-dimensional `torch.Tensor` of indices.</span>
+<span class="sd">        for internal ``log_pdf`` computations. Defaults to</span>
+<span class="sd">        ``torch.Tensor.is_cuda``.</span>
+<span class="sd">    :return: A generator yielding a sequence of integers.</span>
 
 <span class="sd">    Examples::</span>
 
@@ -460,7 +489,7 @@
             <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">args</span><span class="p">,</span>
             <span class="s2">&quot;kwargs&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">,</span>
             <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-            <span class="s2">&quot;map_data_stack&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;cond_indep_stack&quot;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s2">&quot;done&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -529,15 +558,18 @@
 <div class="viewcode-block" id="random_module"><a class="viewcode-back" href="../../primitives.html#pyro.__init__.random_module">[docs]</a><span class="k">def</span> <span class="nf">random_module</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">nn_module</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Places a prior over the parameters of the module `nn_module`.</span>
+<span class="sd">    Returns a distribution (callable) over `nn.Module`s, which</span>
+<span class="sd">    upon calling returns a sampled `nn.Module`.</span>
 
-<span class="sd">    See the `Bayesian Regression &lt;http://pyro.ai/examples/bayesian_regression.html&gt;`_</span>
-<span class="sd">    tutorial for an example.</span>
+<span class="sd">    See the `Bayesian Regression tutorial &lt;http://pyro.ai/examples/bayesian_regression.html&gt;`_</span>
+<span class="sd">    for an example.</span>
 
 <span class="sd">    :param name: name of pyro module</span>
 <span class="sd">    :type name: str</span>
 <span class="sd">    :param nn_module: the module to be registered with pyro</span>
 <span class="sd">    :type nn_module: torch.nn.Module</span>
-<span class="sd">    :param prior: prior distribution or iterable over distributions</span>
+<span class="sd">    :param prior: pyro distribution, stochastic function, or python dict with parameter names</span>
+<span class="sd">                  as keys and respective distributions/stochastic functions as values.</span>
 <span class="sd">    :returns: a callable which returns a sampled module</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">nn_module</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">),</span> <span class="s2">&quot;Module is not a NN module.&quot;</span>
@@ -585,7 +617,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0',
+            VERSION:'0.1.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

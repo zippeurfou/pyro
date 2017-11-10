@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Neural Network &mdash; Pyro 0.1.0 documentation</title>
+  <title>Neural Network &mdash; Pyro 0.1.2 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/>
+    <link rel="top" title="Pyro 0.1.2 documentation" href="index.html"/>
         <link rel="next" title="Optimization" href="optimization.html"/>
         <link rel="prev" title="Parameters" href="parameters.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -196,13 +196,13 @@ Mathieu Germain, Karol Gregor, Iain Murray, Hugo Larochelle</p>
 <li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the dimensionality of the hidden units</li>
 <li><strong>output_dim_multiplier</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the dimensionality of the output is given by input_dim x output_dim_multiplier.
 specifically the shape of the output for a single vector input is [output_dim_multiplier, input_dim].
-for any i, j in range(0, output_dim_multiplier) the subset of outputs [i, :] has identifical
+for any i, j in range(0, output_dim_multiplier) the subset of outputs [i, :] has identical
 autoregressive structure to [j, :]. defaults to <cite>1</cite></li>
 <li><strong>mask_encoding</strong> (<em>torch.LongTensor</em>) – a torch Tensor that controls the autoregressive structure (see reference). by default
 this is chosen at random.</li>
 <li><strong>permutation</strong> (<em>torch.LongTensor</em>) – an optional permutation that is applied to the inputs and controls the order of the
 autoregressive factorization. in particular for the identity permutation the autoregressive structure
-is such that the jacobian is upper triangular. by default this is chosen at random.</li>
+is such that the Jacobian is upper triangular. by default this is chosen at random.</li>
 </ul>
 </td>
 </tr>
@@ -241,7 +241,7 @@ is such that the jacobian is upper triangular. by default this is chosen at rand
 <li><strong>in_features</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of input features</li>
 <li><strong>out_features</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of output features</li>
 <li><strong>mask</strong> (<em>torch.autograd.Variable</em>) – the mask to apply to the in_features x out_features weight matrix</li>
-<li><strong>bias</strong> – whether or not <cite>MaskedLinear</cite> should include a bias term. defaults to <cite>True</cite></li>
+<li><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether or not <cite>MaskedLinear</cite> should include a bias term. defaults to <cite>True</cite></li>
 </ul>
 </td>
 </tr>
@@ -302,7 +302,7 @@ is such that the jacobian is upper triangular. by default this is chosen at rand
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0',
+            VERSION:'0.1.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

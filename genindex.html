@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; Pyro 0.1.0 documentation</title>
+  <title>Index &mdash; Pyro 0.1.2 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Pyro 0.1.0 documentation" href="index.html"/> 
+    <link rel="top" title="Pyro 0.1.2 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -354,13 +354,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="poutine.html#pyro.poutine.trace.Trace.compute_batch_log_pdf">compute_batch_log_pdf() (Trace method)</a>
 </li>
-      <li><a href="poutine.html#pyro.poutine.lambda_poutine.CondIndepStackFrame">CondIndepStackFrame (class in pyro.poutine.lambda_poutine)</a>
+      <li><a href="poutine.html#pyro.poutine.indep_poutine.CondIndepStackFrame">CondIndepStackFrame (class in pyro.poutine.indep_poutine)</a>
 </li>
       <li><a href="poutine.html#pyro.poutine.condition_poutine.ConditionPoutine">ConditionPoutine (class in pyro.poutine.condition_poutine)</a>
 </li>
       <li><a href="poutine.html#pyro.poutine.trace.Trace.copy">copy() (Trace method)</a>
 </li>
-      <li><a href="poutine.html#pyro.poutine.lambda_poutine.CondIndepStackFrame.counter">counter (CondIndepStackFrame attribute)</a>
+      <li><a href="poutine.html#pyro.poutine.indep_poutine.CondIndepStackFrame.counter">counter (CondIndepStackFrame attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -516,6 +516,8 @@
 </li>
       <li><a href="inference.html#pyro.infer.importance.Importance">Importance (class in pyro.infer.importance)</a>
 </li>
+      <li><a href="poutine.html#pyro.poutine.indep_poutine.IndepPoutine">IndepPoutine (class in pyro.poutine.indep_poutine)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="transformed_dist.html#pyro.distributions.transformed_distribution.Bijector.inverse">inverse() (Bijector method)</a>
@@ -534,8 +536,6 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="poutine.html#pyro.poutine.lambda_poutine.LambdaPoutine">LambdaPoutine (class in pyro.poutine.lambda_poutine)</a>
-</li>
       <li><a href="poutine.html#pyro.poutine.lift_poutine.LiftPoutine">LiftPoutine (class in pyro.poutine.lift_poutine)</a>
 </li>
       <li><a href="parameters.html#pyro.params.param_store.ParamStoreDict.load">load() (ParamStoreDict method)</a>
@@ -590,7 +590,7 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="poutine.html#pyro.poutine.lambda_poutine.CondIndepStackFrame.name">name (CondIndepStackFrame attribute)</a>
+      <li><a href="poutine.html#pyro.poutine.indep_poutine.CondIndepStackFrame.name">name (CondIndepStackFrame attribute)</a>
 </li>
       <li><a href="parameters.html#pyro.params.param_store.ParamStoreDict.named_parameters">named_parameters() (ParamStoreDict method)</a>
 </li>
@@ -684,13 +684,15 @@
 </li>
       <li><a href="poutine.html#module-pyro.poutine.escape_poutine">pyro.poutine.escape_poutine (module)</a>
 </li>
-      <li><a href="poutine.html#module-pyro.poutine.lambda_poutine">pyro.poutine.lambda_poutine (module)</a>
+      <li><a href="poutine.html#module-pyro.poutine.indep_poutine">pyro.poutine.indep_poutine (module)</a>
 </li>
       <li><a href="poutine.html#module-pyro.poutine.lift_poutine">pyro.poutine.lift_poutine (module)</a>
 </li>
       <li><a href="poutine.html#module-pyro.poutine.poutine">pyro.poutine.poutine (module)</a>
 </li>
       <li><a href="poutine.html#module-pyro.poutine.replay_poutine">pyro.poutine.replay_poutine (module)</a>
+</li>
+      <li><a href="poutine.html#module-pyro.poutine.scale_poutine">pyro.poutine.scale_poutine (module)</a>
 </li>
       <li><a href="poutine.html#module-pyro.poutine.trace">pyro.poutine.trace (module)</a>
 </li>
@@ -774,6 +776,8 @@
         <li><a href="optimization.html#pyro.optim.optim.PyroOptim.save">(PyroOptim method)</a>
 </li>
       </ul></li>
+      <li><a href="poutine.html#pyro.poutine.scale_poutine.ScalePoutine">ScalePoutine (class in pyro.poutine.scale_poutine)</a>
+</li>
       <li><a href="inference.html#pyro.infer.search.Search">Search (class in pyro.infer.search)</a>
 </li>
       <li><a href="parameters.html#pyro.params.param_store.ParamStoreDict.set_state">set_state() (ParamStoreDict method)</a>
@@ -834,7 +838,7 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="poutine.html#pyro.poutine.lambda_poutine.CondIndepStackFrame.vectorized">vectorized (CondIndepStackFrame attribute)</a>
+      <li><a href="poutine.html#pyro.poutine.indep_poutine.CondIndepStackFrame.vectorized">vectorized (CondIndepStackFrame attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -875,7 +879,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0',
+            VERSION:'0.1.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

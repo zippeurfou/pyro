@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyro.poutine.trace_poutine &mdash; Pyro 0.1.0 documentation</title>
+  <title>pyro.poutine.trace_poutine &mdash; Pyro 0.1.2 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Pyro 0.1.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Pyro 0.1.2 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -189,20 +189,20 @@
         <span class="k">if</span> <span class="n">site_is_subsample</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">continue</span>
         <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">):</span>
-            <span class="n">stack</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;map_data_stack&quot;</span><span class="p">]))</span>
+            <span class="n">stack</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;cond_indep_stack&quot;</span><span class="p">])</span>
             <span class="n">vec_mds</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">stack</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">vectorized</span><span class="p">]</span>
             <span class="c1"># check for nested vectorized map datas</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec_mds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">vectorized_map_data_info</span><span class="p">[</span><span class="s1">&#39;rao-blackwellization-condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">vectorized_map_data_info</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;nested iarange&#39;</span><span class="p">)</span>
             <span class="c1"># check that vectorized map datas only found at innermost position</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec_mds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">vectorized</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vec_mds</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">vectorized</span><span class="p">:</span>
                 <span class="n">vectorized_map_data_info</span><span class="p">[</span><span class="s1">&#39;rao-blackwellization-condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">vectorized_map_data_info</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;non-leaf iarange&#39;</span><span class="p">)</span>
             <span class="c1"># enforce that if there are multiple vectorized map_datas, they are all</span>
             <span class="c1"># independent of one another because of enclosing list map_datas</span>
             <span class="c1"># (step 1: collect the stacks)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec_mds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vec_mds</span><span class="p">:</span>
                 <span class="n">vec_md_stacks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
             <span class="c1"># bail, since condition false</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">vectorized_map_data_info</span><span class="p">[</span><span class="s1">&#39;rao-blackwellization-condition&#39;</span><span class="p">]:</span>
@@ -234,7 +234,7 @@
             <span class="k">if</span> <span class="n">site_is_subsample</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">vectorized</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;map_data_stack&quot;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">vectorized</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;cond_indep_stack&quot;</span><span class="p">]):</span>
                     <span class="n">vectorized_map_data_info</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">vectorized_map_data_info</span></div>
@@ -243,13 +243,12 @@
 <div class="viewcode-block" id="identify_dense_edges"><a class="viewcode-back" href="../../../poutine.html#pyro.poutine.trace_poutine.identify_dense_edges">[docs]</a><span class="k">def</span> <span class="nf">identify_dense_edges</span><span class="p">(</span><span class="n">trace</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modifies a trace in-place by adding all edges based on the</span>
-<span class="sd">    `map_data_stack` information stored at each site.</span>
+<span class="sd">    `cond_indep_stack` information stored at each site.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">site_is_subsample</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">continue</span>
         <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;sample&quot;</span><span class="p">:</span>
-            <span class="n">map_data_stack</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;map_data_stack&quot;</span><span class="p">]))</span>
             <span class="k">for</span> <span class="n">past_name</span><span class="p">,</span> <span class="n">past_node</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">site_is_subsample</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
                     <span class="k">continue</span>
@@ -257,8 +256,7 @@
                     <span class="k">if</span> <span class="n">past_name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                         <span class="k">break</span>
                     <span class="n">past_node_independent</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">map_data_stack</span><span class="p">,</span>
-                                             <span class="nb">reversed</span><span class="p">(</span><span class="n">past_node</span><span class="p">[</span><span class="s2">&quot;map_data_stack&quot;</span><span class="p">])):</span>
+                    <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;cond_indep_stack&quot;</span><span class="p">],</span> <span class="n">past_node</span><span class="p">[</span><span class="s2">&quot;cond_indep_stack&quot;</span><span class="p">]):</span>
                         <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">query</span><span class="o">.</span><span class="n">counter</span> <span class="o">!=</span> <span class="n">target</span><span class="o">.</span><span class="n">counter</span><span class="p">:</span>
                             <span class="n">past_node_independent</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="k">break</span>
@@ -292,7 +290,7 @@
 
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds appropriate edges based on map_data_stack information</span>
+<span class="sd">        Adds appropriate edges based on cond_indep_stack information</span>
 <span class="sd">        upon exiting the context.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_type</span> <span class="o">==</span> <span class="s2">&quot;dense&quot;</span><span class="p">:</span>
@@ -428,7 +426,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'0.1.0',
+            VERSION:'0.1.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
