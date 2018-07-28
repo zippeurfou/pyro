@@ -236,7 +236,8 @@ def compute_marginals_bp(exists_logits, assign_logits, bp_iters):
     message_e_to_a = exists_logits.new_zeros(assign_logits.shape)
     message_a_to_e = exists_logits.new_zeros(assign_logits.shape)
     for i in range(bp_iters):
-        message_e_to_a = -(message_a_to_e - message_a_to_e.sum(0, True) - exists_logits).exp().log1p()
+        temp = message_a_to_e - message_a_to_e.sum(0, True) - exists_logits
+        message_e_to_a = -temp.exp().log1p()
         joint = (assign_logits + message_e_to_a).exp()
         message_a_to_e = (assign_logits - torch.log1p(joint.sum(1, True) - joint)).exp().log1p()
         warn_if_nan(message_e_to_a, 'message_e_to_a iter {}'.format(i))

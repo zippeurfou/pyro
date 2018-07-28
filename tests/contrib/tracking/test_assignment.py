@@ -4,9 +4,9 @@ import pytest
 import torch
 from torch.autograd import grad
 
-import pyro
 import pyro.distributions as dist
 from pyro.contrib.tracking.assignment import MarginalAssignment, MarginalAssignmentPersistent, MarginalAssignmentSparse
+from pyro.util import torch_isnan
 from tests.common import assert_equal
 
 INF = float('inf')
@@ -37,7 +37,6 @@ def sparse_to_dense(num_objects, num_detections, edges, assign_logits):
 def test_dense_smoke():
     num_objects = 4
     num_detections = 2
-    pyro.set_rng_seed(0)
     exists_logits = torch.zeros(num_objects)
     assign_logits = logit(torch.tensor([
         [0.5, 0.5, 0.0, 0.0],
@@ -63,7 +62,6 @@ def test_dense_smoke():
 def test_sparse_smoke():
     num_objects = 4
     num_detections = 2
-    pyro.set_rng_seed(0)
     exists_logits = torch.zeros(num_objects)
     edges = exists_logits.new_tensor([
         [0, 0, 1, 0, 1, 0],
@@ -86,6 +84,35 @@ def test_sparse_smoke():
     other = MarginalAssignment(exists_logits, assign_logits, bp_iters=5)
     assert_equal(other.exists_dist.probs, solver.exists_dist.probs, prec=1e-3)
     assert_equal(other.assign_dist.probs, solver.assign_dist.probs, prec=1e-3)
+
+
+def test_gradients_smoke():
+    num_objects = 4
+    num_detections = 2
+    exists_logits = torch.zeros(num_objects, requires_grad=True)
+    assign_logits = logit(torch.tensor([
+        [0.5, 0.5, 0.0, 0.0],
+        [0.0, 0.5, 0.5, 0.5],
+    ])).requires_grad_()
+    assert assign_logits.shape == (num_detections, num_objects)
+
+    solver = MarginalAssignment(exists_logits, assign_logits, bp_iters=5)
+
+    loss = solver.exists_dist.probs.sum() + solver.assign_dist.probs[..., :-1].sum()
+
+    # test first derivative
+    de, da = grad(loss, [exists_logits, assign_logits], create_graph=True)
+    assert de.shape == exists_logits.shape
+    assert da.shape == assign_logits.shape
+    assert not torch_isnan(de)
+    assert not torch_isnan(da)
+
+    # test first derivative
+    dde, dda = grad(de.sum() + da.sum(), [exists_logits, assign_logits], create_graph=True)
+    assert dde.shape == exists_logits.shape
+    assert dda.shape == assign_logits.shape
+    assert not torch_isnan(dde)
+    assert not torch_isnan(dda)
 
 
 def test_sparse_grid_smoke():

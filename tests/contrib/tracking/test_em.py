@@ -5,14 +5,16 @@ import math
 import pytest
 import torch
 from torch.distributions import constraints
+from torch.nn.functional import binary_cross_entropy_with_logits
 
 import pyro
 import pyro.distributions as dist
 import pyro.poutine as poutine
 from pyro.contrib.tracking.assignment import MarginalAssignment
 from pyro.infer import SVI, TraceEnum_ELBO
+from pyro.ops.newton import newton_step
 from pyro.optim import Adam
-from pyro.optim.multi import MixedMultiOptimizer, Newton
+from pyro.optim.multi import MixedMultiOptimizer, Newton, PyroMultiOptimizer
 
 
 def make_args():
@@ -27,7 +29,7 @@ def make_args():
     # Detaching is indeed required for the Hessian to be block-diagonal,
     # but it is unclear whether convergence would be faster if we applied
     # a blockwise method (Newton) to the full Hessian, without detaching.
-    args.assignment_grad = False
+    args.assignment_grad = True
 
     return args
 
@@ -52,7 +54,7 @@ def model(detections, args):
         assign_probs = torch.empty(max_num_objects + 1)
         assign_probs[:-1] = (1 - p_fake) / max_num_objects
         assign_probs[-1] = p_fake
-        assign = pyro.sample('assign', dist.Categorical(logits=assign_probs))
+        assign = pyro.sample('assign', dist.Categorical(assign_probs))
         is_fake = (assign == assign.shape[-1] - 1)
         objects_plus_bogus = torch.zeros(max_num_objects + 1)
         objects_plus_bogus[:max_num_objects] = objects
@@ -120,6 +122,73 @@ def generate_data(args):
     return detections
 
 
+def test_stack_gradients_1():
+    x = torch.zeros(1, requires_grad=True)
+    y = torch.zeros(1)
+    stacked = torch.stack([x, y], -1)
+    loss = binary_cross_entropy_with_logits(stacked[:, 0], y, reduction='none')
+    g = torch.autograd.grad(loss, [x], create_graph=True)[0]
+    torch.autograd.grad(g.sum(), [x], create_graph=True)[0]
+
+
+def test_stack_gradients_2():
+    x = torch.zeros(1, requires_grad=True)
+    y = torch.zeros(1)
+    stacked = torch.stack([y, x], -1)
+    loss = binary_cross_entropy_with_logits(stacked[:, 1], y, reduction='none')
+    g = torch.autograd.grad(loss, [x], create_graph=True)[0]
+    torch.autograd.grad(g.sum(), [x], create_graph=True)[0]
+
+
+def test_normal_bernoulli_gradients_smoke():
+    args = make_args()
+    objects_loc = torch.randn(args.max_num_objects, 1, requires_grad=True)
+    exists_loglike = exists_log_likelihood(objects_loc.squeeze(-1), args)
+    exists_logits = exists_loglike[:, 1] - exists_loglike[:, 0]
+    exists_dist = dist.Bernoulli(logits=exists_logits)
+    loss = exists_dist.log_prob(torch.zeros(len(objects_loc))).sum()
+    newton_step(loss, objects_loc, trust_radius=1.0)
+
+
+def test_exists_gradients_smoke():
+    args = make_args()
+    detections = generate_data(args)
+
+    noise_scale = pyro.param('noise_scale', torch.tensor(args.init_noise_scale))
+    objects = pyro.param('objects_loc', torch.randn(args.max_num_objects, 1)).squeeze(-1)
+    num_detections, = detections.shape
+    max_num_objects, = objects.shape
+
+    # Evaluate log likelihoods. TODO make this more pyronic.
+    exists_loglike = exists_log_likelihood(objects, args)
+    assign_loglike = assign_log_likelihood(objects, detections.unsqueeze(-1), noise_scale, args)
+    assert exists_loglike.shape == (max_num_objects, 2)
+    assert assign_loglike.shape == (num_detections, max_num_objects + 1)
+
+    # Compute soft assignments.
+    exists_logits = exists_loglike[:, 1] - exists_loglike[:, 0]
+    assign_logits = assign_loglike[:, :-1] - assign_loglike[:, -1:]
+    assignment = MarginalAssignment(exists_logits, assign_logits, bp_iters=0)
+
+    # Perform newton update on exists dist.
+    exists = assignment.exists_dist.enumerate_support()
+    loss = assignment.exists_dist.log_prob(exists).sum()
+    newton_step(loss, pyro.param('objects_loc'), trust_radius=1.0)
+
+
+def test_guide_gradients_smoke():
+    args = make_args()
+    detections = generate_data(args)
+
+    pyro.clear_param_store()
+    pyro.param('noise_scale', torch.tensor(args.init_noise_scale))
+    pyro.param('objects_loc', torch.randn(args.max_num_objects, 1))
+
+    # Take a newton step wrt the guide's log_prob.
+    loss = -poutine.trace(guide).get_trace(detections, args).log_prob_sum()
+    newton_step(loss, pyro.param('objects_loc'), trust_radius=1.0)
+
+
 @pytest.mark.parametrize('assignment_grad', [False, True])
 def test_em(assignment_grad):
     args = make_args()
@@ -173,9 +242,30 @@ def test_em_nested_in_svi(assignment_grad):
             svi_step, loss, pyro.param('noise_scale').item()))
 
 
+def test_svi():
+    args = make_args()
+    detections = generate_data(args)
+
+    pyro.clear_param_store()
+    pyro.param('noise_scale', torch.tensor(args.init_noise_scale),
+               constraint=constraints.positive)
+    pyro.param('objects_loc', torch.randn(args.max_num_objects, 1))
+
+    # Learn both object_loc and noise_scale via Adam.
+    elbo = TraceEnum_ELBO(max_iarange_nesting=2)
+    optim = PyroMultiOptimizer(Adam({'lr': 0.1}))
+    for svi_step in range(50):
+        with poutine.trace(param_only=True) as param_capture:
+            loss = elbo.differentiable_loss(model, guide, detections, args)
+        params = {name: pyro.param(name).unconstrained()
+                  for name in param_capture.trace.nodes.keys()}
+        optim.step(loss, params)
+        print('step {: >2d}, loss = {:0.6f}, noise_scale = {:0.6f}'.format(
+            svi_step, loss.item(), pyro.param('noise_scale').item()))
+
+
 def test_svi_multi():
     args = make_args()
-    args.assignment_grad = True
     detections = generate_data(args)
 
     pyro.clear_param_store()
